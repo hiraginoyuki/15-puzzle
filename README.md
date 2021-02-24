@@ -3,6 +3,7 @@
 
 ## Usage
 
+### Installation
 Use [`npm`](https://docs.npmjs.com/) to install. 😃
 ```sh
 npm install 15-puzzle
