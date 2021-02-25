@@ -1,5 +1,5 @@
 import { flip, range, chooseRandomIndex, chooseRandom } from './utils';
-import seedrandom from "seedrandom";
+import { create } from 'random-seed';
 
 const { floor, abs } = Math;
 
@@ -26,7 +26,8 @@ export class FifteenPuzzle {
     const rows    = isSeedPassed ? typeof args[2] === "number" ? args[2] : columns
     /**************************/ : typeof args[1] === "number" ? args[1] : columns;
 
-    const randomizer: () => number = seedrandom(seed);
+    const randomSeed = create(seed);
+    const randomizer: () => number = () => randomSeed.random();
     const random = <T>(array: T[]) => chooseRandom(array, randomizer);
     const randomIndex = <T>(array: T[]) => chooseRandomIndex(array, randomizer);
 
@@ -41,6 +42,7 @@ export class FifteenPuzzle {
     const horizontalFirst = random([true, false]);
     puzzle.tap(horizontalFirst ? [random(range(columns)), rows - 1] : [columns - 1, random(range(rows))]);
     puzzle.tap(horizontalFirst ? [puzzle.getEmptyPoint()[0], random(range(rows))] : [random(range(columns)), puzzle.getEmptyPoint()[1]]);
+    randomSeed.done();
     return puzzle;
   }
 
@@ -116,4 +118,3 @@ export class FifteenPuzzle {
       return true;
   }
 }
- 
