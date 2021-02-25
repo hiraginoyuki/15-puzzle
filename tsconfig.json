@@ -6,6 +6,7 @@
     "noImplicitThis": true,
     "noImplicitAny": true,
     "alwaysStrict": true,
+    "declaration": true,
     "sourceMap": true,
     "allowJs": true,
     "moduleResolution": "node",
