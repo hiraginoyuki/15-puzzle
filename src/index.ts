@@ -1,0 +1,1 @@
+export { FifteenPuzzle } from './15-puzzle';

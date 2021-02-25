@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "strictNullChecks": true,
+    "noUnusedLocals" : true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "alwaysStrict": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "module": "commonjs",
+    "target": "es5",
+    "lib": ["es2019", "es6"]
+  }
+}

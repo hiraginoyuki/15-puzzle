@@ -1,0 +1,27 @@
+{
+  "name": "15-puzzle",
+  "version": "1.0.0",
+  "description": "A simple 15 puzzle library",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HiraginoYuki/15-puzzle.git"
+  },
+  "keywords": [
+    "15puzzle",
+    "puzzle"
+  ],
+  "author": "Yuki Hiragino",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HiraginoYuki/15-puzzle/issues"
+  },
+  "homepage": "https://github.com/HiraginoYuki/15-puzzle#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^4.2.2"
+  }
+}
