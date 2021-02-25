@@ -1,4 +1,5 @@
 import { flip, range, chooseRandomIndex, chooseRandom } from './utils';
+import seedrandom from "seedrandom";
 
 const { floor, abs } = Math;
 
@@ -11,18 +12,35 @@ class PointUtil {
   convertIndexToPoint(index: number): Point2D { return [index % this.columns, floor(index / this.columns)]; }
 }
 export class FifteenPuzzle {
-  static generateRandom(columns: number = 4, rows: number = columns) {
+  static generateRandom(): FifteenPuzzle;
+  static generateRandom(size: number): FifteenPuzzle;
+  static generateRandom(columns: number, rows: number): FifteenPuzzle;
+  static generateRandom(seed: string): FifteenPuzzle;
+  static generateRandom(seed: string, size: number): FifteenPuzzle;
+  static generateRandom(seed: string, columns: number, rows: number): FifteenPuzzle;
+  static generateRandom(...args: [...([] | [string]), ...([] | [number] | [number, number])]) {
+    const isSeedPassed = typeof args[0] === "string";
+    const seed    = isSeedPassed ? args[0] as string : `${+new Date}`;
+    const columns = isSeedPassed ? typeof args[1] === "number" ? args[1] : 4
+    /**************************/ : typeof args[0] === "number" ? args[0] : 4;
+    const rows    = isSeedPassed ? typeof args[2] === "number" ? args[2] : columns
+    /**************************/ : typeof args[1] === "number" ? args[1] : columns;
+
+    const randomizer: () => number = seedrandom(seed);
+    const random = <T>(array: T[]) => chooseRandom(array, randomizer);
+    const randomIndex = <T>(array: T[]) => chooseRandomIndex(array, randomizer);
+
     const length = rows * columns;
     const numbers: number[] = [];
     const unusedNumbers = range(1, length);
     for (const _ of range(length - 3)) {
-      numbers.push(unusedNumbers.splice(chooseRandomIndex(unusedNumbers), 1)[0]);
+      numbers.push(unusedNumbers.splice(randomIndex(unusedNumbers), 1)[0]);
     }
     let puzzle = new this([columns, rows], numbers.concat(unusedNumbers, 0));
     if (!puzzle.isSolvable()) puzzle = new this([columns, rows], numbers.concat(unusedNumbers.map(flip), 0));
-    const horizontalFirst = chooseRandom([true, false]);
-    puzzle.tap(horizontalFirst ? [chooseRandom(range(columns)), rows - 1] : [columns - 1, chooseRandom(range(rows))]);
-    puzzle.tap(horizontalFirst ? [puzzle.getEmptyPoint()[0], chooseRandom(range(rows))] : [chooseRandom(range(columns)), puzzle.getEmptyPoint()[1]]);
+    const horizontalFirst = random([true, false]);
+    puzzle.tap(horizontalFirst ? [random(range(columns)), rows - 1] : [columns - 1, random(range(rows))]);
+    puzzle.tap(horizontalFirst ? [puzzle.getEmptyPoint()[0], random(range(rows))] : [random(range(columns)), puzzle.getEmptyPoint()[1]]);
     return puzzle;
   }
 

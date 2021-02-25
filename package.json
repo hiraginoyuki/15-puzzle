@@ -20,7 +20,10 @@
     "url": "https://github.com/HiraginoYuki/15-puzzle/issues"
   },
   "homepage": "https://github.com/HiraginoYuki/15-puzzle#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@types/seedrandom": "^2.4.28",
+    "seedrandom": "^3.0.5"
+  },
   "devDependencies": {
     "typescript": "^4.2.2"
   }
