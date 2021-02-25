@@ -14,5 +14,6 @@
     "module": "commonjs",
     "target": "es5",
     "lib": ["es2019", "es6"]
-  }
+  },
+  "include": ["src/**/*"]
 }
