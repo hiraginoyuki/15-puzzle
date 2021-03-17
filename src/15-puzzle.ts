@@ -56,7 +56,7 @@ export class FifteenPuzzle {
     if (Array.isArray(n)) [this.columns, this.rows] = n;
     else this.columns = this.rows = n;
     this.pointUtil = new PointUtil(this.columns);
-    if (!this.isCorrect()) throw new RangeError("Invalid numbers");
+    if (!this.isValid()) throw new RangeError("Invalid numbers");
   }
 
   get length() { return this.numbers.length; }
@@ -68,14 +68,14 @@ export class FifteenPuzzle {
   getPointFromValue(value: number) { return this.pointUtil.convertIndexToPoint(this.numbers.findIndex(i => i === value)); }
   getEmptyPoint() { return this.getPointFromValue(0); }
 
-  isCorrect() {
+  isValid() {
     return this.numbers.length === this.columns * this.rows && range(this.numbers.length).every(i => this.numbers.includes(i));
   }
   /**
    * A puzzle is said to be solvable only when it can be solved by swapping two of the pieces even times. 
    */
   isSolvable() {
-    if (!this.isCorrect()) return false;
+    if (!this.isValid()) return false;
     const cloned = this.clone();
     if (!cloned.equals(cloned.getPointFromValue(0), [cloned.columns, cloned.rows])) {
       cloned.tap([cloned.columns - 1, cloned.getPointFromValue(0)[1]]);
@@ -91,7 +91,7 @@ export class FifteenPuzzle {
     return swapCount % 2 === 0;
   }
   isSolved() {
-    return this.isCorrect()
+    return this.isValid()
         && range(1, this.length).concat(0).every((n, i) => this.getValueFromPoint(this.pointUtil.convertIndexToPoint(i)) == n);
   }
 
