@@ -11,20 +11,28 @@ class PointUtil {
   convertPointToIndex(point: Point2D) { return point[0] + point[1] * this.columns; }
   convertIndexToPoint(index: number): Point2D { return [index % this.columns, floor(index / this.columns)]; }
 }
+type FifteenPuzzleArgs = [...([] | [string]), ...([] | [number] | [number, number])];
+
 export class FifteenPuzzle {
-  static generateRandom(): FifteenPuzzle;
-  static generateRandom(size: number): FifteenPuzzle;
-  static generateRandom(columns: number, rows: number): FifteenPuzzle;
-  static generateRandom(seed: string): FifteenPuzzle;
-  static generateRandom(seed: string, size: number): FifteenPuzzle;
-  static generateRandom(seed: string, columns: number, rows: number): FifteenPuzzle;
-  static generateRandom(...args: [...([] | [string]), ...([] | [number] | [number, number])]) {
+  static convertArgs(args: FifteenPuzzleArgs) {
     const isSeedPassed = typeof args[0] === "string";
     const seed    = isSeedPassed ? args[0] as string : `${+new Date}`;
     const columns = isSeedPassed ? typeof args[1] === "number" ? args[1] : 4
     /**************************/ : typeof args[0] === "number" ? args[0] : 4;
     const rows    = isSeedPassed ? typeof args[2] === "number" ? args[2] : columns
     /**************************/ : typeof args[1] === "number" ? args[1] : columns;
+
+    return { seed, columns, rows };
+  }
+
+  static generateRandom(): FifteenPuzzle;
+  static generateRandom(size: number): FifteenPuzzle;
+  static generateRandom(columns: number, rows: number): FifteenPuzzle;
+  static generateRandom(seed: string): FifteenPuzzle;
+  static generateRandom(seed: string, size: number): FifteenPuzzle;
+  static generateRandom(seed: string, columns: number, rows: number): FifteenPuzzle;
+  static generateRandom(...args: FifteenPuzzleArgs) {
+    const { seed, columns, rows } = this.convertArgs(args);
 
     const randomSeed = create(seed);
     const randomizer: () => number = () => randomSeed.random();
