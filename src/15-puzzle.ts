@@ -123,6 +123,6 @@ export class FifteenPuzzle {
         this.getEmptyPoint(),
         isVertical ? [point[0], emptyPoint[1] - i] : [emptyPoint[0] - i, point[1]]
       ));
-      return true;
+    return true;
   }
 }
