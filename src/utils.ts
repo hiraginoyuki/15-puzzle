@@ -1,5 +1,5 @@
 export const chooseRandomIndex = <T>(array: T[], randomizer = () => Math.random()): number => Math.floor(randomizer() * array.length);
-export const chooseRandom = <T>(array: T[], randomizer = () => Math.random()): T => array[chooseRandomIndex(array, randomizer)];
+export const chooseRandom      = <T>(array: T[], randomizer = () => Math.random()): T      => array[chooseRandomIndex(array, randomizer)];
 
 export const flip = <T>(e: T, i: number, a: T[]) => a[a.length - 1 - i];
 
