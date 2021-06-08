@@ -1,1 +1,1 @@
-export { FifteenPuzzle } from './15-puzzle';
+export { FifteenPuzzle, Pieces } from './15-puzzle';
