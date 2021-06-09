@@ -3,7 +3,7 @@ import { create } from 'random-seed';
 import { chooseRandom, chooseRandomIndex, range } from "./utils";
 import { notDupe } from "./dupe";
 
-class Piece {
+export class Piece {
   constructor(
     public x: number,
     public y: number,
