@@ -74,8 +74,8 @@ export class Pieces extends Array<Readonly<Piece>[]> {
     if (piece1 === piece2) return;
     const { x: x1, y: y1 } = piece1;
     const { x: x2, y: y2 } = piece2;
-    piece1.x = x2, piece1.y = y2, piece1.index = x2 * this.width + y2;
-    piece2.x = x1, piece2.y = y1, piece2.index = x1 * this.width + y1;
+    piece1.x = x2, piece1.y = y2, piece1.index = x2 + this.width * y2;
+    piece2.x = x1, piece2.y = y1, piece2.index = x1 + this.width * y1;
     this[piece1.y][piece1.x] = piece1;
     this[piece2.y][piece2.x] = piece2;
     this._1dCche = null;
