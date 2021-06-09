@@ -221,6 +221,7 @@ export class FifteenPuzzle extends Pieces {
   public tap(x: number, y: number, $debug = (step: number, msg: string) => {}) {
     const result = super.tap(x, y, $debug);
     if (result) {
+      this.taps?.push({ time: +new Date(), x, y });
       this._isSolvable = null;
       this._isSolving  = null;
       this._isSolved   = null;
