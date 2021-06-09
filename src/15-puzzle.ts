@@ -7,11 +7,13 @@ class Piece {
   constructor(
     public x: number,
     public y: number,
+    public index: number,
     public readonly id: number,
   ) {}
   toVec2() { return new Vec2(this.x, this.y); }
+  isCorrect() { return this.index + 1 === this.id; }
 }
-export class Pieces extends Array<Piece[]> {
+export class Pieces extends Array<Readonly<Piece>[]> {
   public static check1d(pieces: number[], width: number, height: number): boolean {
     return (
       2 <= width  && Number.isInteger(width)  &&
@@ -42,8 +44,8 @@ export class Pieces extends Array<Piece[]> {
   public readonly width: number;
   public readonly height: number;
   constructor(pieces: number[][]) {
-    super(...pieces.map((row, rowIndex) => row.map((id, indexInRow) => (
-      new Piece(indexInRow, rowIndex, id)
+    super(...pieces.map((row, indexOfRow) => row.map((id, indexInRow) => (
+      new Piece(indexInRow, indexOfRow, indexOfRow * pieces[0].length + indexInRow, id)
     ))));
     if (!Pieces.check2d(pieces)) throw new RangeError("illegal argument: pieces");
     this.width = pieces[0].length;
@@ -72,8 +74,8 @@ export class Pieces extends Array<Piece[]> {
     if (piece1 === piece2) return;
     const { x: x1, y: y1 } = piece1;
     const { x: x2, y: y2 } = piece2;
-    piece1.x = x2, piece1.y = y2;
-    piece2.x = x1, piece2.y = y1;
+    piece1.x = x2, piece1.y = y2, piece1.index = x2 * this.width + y2;
+    piece2.x = x1, piece2.y = y1, piece2.index = x1 * this.width + y1;
     this[piece1.y][piece1.x] = piece1;
     this[piece2.y][piece2.x] = piece2;
     this._1dCche = null;
@@ -226,3 +228,4 @@ export class FifteenPuzzle extends Pieces {
     return result;
   }
 }
+ 
