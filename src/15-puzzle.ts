@@ -57,8 +57,8 @@ export class Pieces extends Array<Readonly<Piece>[]> {
     );
   }
 
-  private _1dCche: Piece[] | null = null;
-  get in1d(): Piece[] { return this._1dCche === null ? (this._1dCche = Array.from(this).flat()) : this._1dCche; }
+  private _1dCache: Piece[] | null = null;
+  get in1d(): Piece[] { return this._1dCache === null ? (this._1dCache = Array.from(this).flat()) : this._1dCache; }
 
   public getPiece(idOrPoint: number | Vec2) {
     return (
@@ -78,7 +78,7 @@ export class Pieces extends Array<Readonly<Piece>[]> {
     piece2.x = x1, piece2.y = y1, piece2.index = x1 + this.width * y1;
     this[piece1.y][piece1.x] = piece1;
     this[piece2.y][piece2.x] = piece2;
-    this._1dCche = null;
+    this._1dCache = null;
   }
   public tap(x: number, y: number, $debug = (step: number, msg: string) => {}): boolean {
   $debug(0, `A piece was tapped: pieces[${x}][${y}]`);
@@ -167,8 +167,8 @@ export class FifteenPuzzle extends Pieces {
     }
     const puzzle = new this(this.to2d(numbers.concat(unusedNumbers, 0), width, height), seed, null);
     if (!puzzle.isSolvable) puzzle._swap(
-      puzzle[puzzle.height - 1][puzzle.width - 3]!,
-      puzzle[puzzle.height - 1][puzzle.width - 2]!,
+      puzzle.in1d[puzzle.in1d.length - 3],
+      puzzle.in1d[puzzle.in1d.length - 2],
     );
 
     const horizontalFirst = random([true, false]);
@@ -197,18 +197,18 @@ export class FifteenPuzzle extends Pieces {
   public get isSolved()   { return this._isSolved   === null ? (this._isSolved   = this.checkSolved()  ) : this._isSolved  ; }
   public checkSolvable() {
     const cloned = this.clone();
-    if (new Vec2(cloned.width - 1, cloned.height - 1).equalTo(cloned.getPiece(0)!.toVec2())) {
+    if (!cloned.getPiece(0)!.toVec2().equalTo(new Vec2(cloned.width - 1, cloned.height - 1))) {
       cloned.tap(cloned.width - 1, cloned.getPiece(0)!.y);
       cloned.tap(cloned.width - 1, cloned.height - 1);
     }
-    const swapCount = range(cloned.width * cloned.height - 2).reduce((acc, i) => {
+    const swapCount = range(cloned.in1d.length - 2).reduce((acc, i) => {
       const j = cloned.in1d[i];
       const k = cloned.getPiece(i + 1)!;
       if (j !== k) {
         cloned._swap(j, k);
         return acc + 1;
       } else return acc;
-    });
+    }, 0);
     return swapCount % 2 === 0;
   }
   public checkSolving() { return this.timeStarted !== null; }
@@ -218,15 +218,17 @@ export class FifteenPuzzle extends Pieces {
           .every((n, i) => this.in1d[i].id === n);
   }
 
+  public _swap(piece1: Piece, piece2: Piece) {
+    super._swap(piece1, piece2);
+    this._isSolvable = null;
+    this._isSolving  = null;
+    this._isSolved   = null;
+  }
   public tap(x: number, y: number, $debug = (step: number, msg: string) => {}) {
     const result = super.tap(x, y, $debug);
     if (result) {
       this.taps?.push({ time: +new Date() - this.timeGenerated, x, y });
-      this._isSolvable = null;
-      this._isSolving  = null;
-      this._isSolved   = null;
     }
     return result;
   }
 }
- 
