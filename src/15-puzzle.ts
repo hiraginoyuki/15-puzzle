@@ -57,8 +57,8 @@ export class Pieces extends Array<Readonly<Piece>[]> {
     );
   }
 
-  private _1dCche: Piece[] | null = null;
-  get in1d(): Piece[] { return this._1dCche === null ? (this._1dCche = Array.from(this).flat()) : this._1dCche; }
+  private _1dCache: Piece[] | null = null;
+  get in1d(): Piece[] { return this._1dCache === null ? (this._1dCache = Array.from(this).flat()) : this._1dCache; }
 
   public getPiece(idOrPoint: number | Vec2) {
     return (
@@ -78,7 +78,7 @@ export class Pieces extends Array<Readonly<Piece>[]> {
     piece2.x = x1, piece2.y = y1, piece2.index = x1 + this.width * y1;
     this[piece1.y][piece1.x] = piece1;
     this[piece2.y][piece2.x] = piece2;
-    this._1dCche = null;
+    this._1dCache = null;
   }
   public tap(x: number, y: number, $debug = (step: number, msg: string) => {}): boolean {
   $debug(0, `A piece was tapped: pieces[${x}][${y}]`);
