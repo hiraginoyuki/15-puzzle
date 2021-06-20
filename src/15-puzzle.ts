@@ -218,13 +218,16 @@ export class FifteenPuzzle extends Pieces {
           .every((n, i) => this.in1d[i].id === n);
   }
 
+  public _swap(piece1: Piece, piece2: Piece) {
+    super._swap(piece1, piece2);
+    this._isSolvable = null;
+    this._isSolving  = null;
+    this._isSolved   = null;
+  }
   public tap(x: number, y: number, $debug = (step: number, msg: string) => {}) {
     const result = super.tap(x, y, $debug);
     if (result) {
       this.taps?.push({ time: +new Date() - this.timeGenerated, x, y });
-      this._isSolvable = null;
-      this._isSolving  = null;
-      this._isSolved   = null;
     }
     return result;
   }
