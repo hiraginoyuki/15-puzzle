@@ -197,18 +197,18 @@ export class FifteenPuzzle extends Pieces {
   public get isSolved()   { return this._isSolved   === null ? (this._isSolved   = this.checkSolved()  ) : this._isSolved  ; }
   public checkSolvable() {
     const cloned = this.clone();
-    if (new Vec2(cloned.width - 1, cloned.height - 1).equalTo(cloned.getPiece(0)!.toVec2())) {
+    if (!cloned.getPiece(0)!.toVec2().equalTo(new Vec2(cloned.width - 1, cloned.height - 1))) {
       cloned.tap(cloned.width - 1, cloned.getPiece(0)!.y);
       cloned.tap(cloned.width - 1, cloned.height - 1);
     }
-    const swapCount = range(cloned.width * cloned.height - 2).reduce((acc, i) => {
+    const swapCount = range(cloned.in1d.length - 2).reduce((acc, i) => {
       const j = cloned.in1d[i];
       const k = cloned.getPiece(i + 1)!;
       if (j !== k) {
         cloned._swap(j, k);
         return acc + 1;
       } else return acc;
-    });
+    }, 0);
     return swapCount % 2 === 0;
   }
   public checkSolving() { return this.timeStarted !== null; }
@@ -232,4 +232,3 @@ export class FifteenPuzzle extends Pieces {
     return result;
   }
 }
- 
