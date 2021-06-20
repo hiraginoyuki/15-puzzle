@@ -167,8 +167,8 @@ export class FifteenPuzzle extends Pieces {
     }
     const puzzle = new this(this.to2d(numbers.concat(unusedNumbers, 0), width, height), seed, null);
     if (!puzzle.isSolvable) puzzle._swap(
-      puzzle[puzzle.height - 1][puzzle.width - 3]!,
-      puzzle[puzzle.height - 1][puzzle.width - 2]!,
+      puzzle.in1d[puzzle.in1d.length - 3],
+      puzzle.in1d[puzzle.in1d.length - 2],
     );
 
     const horizontalFirst = random([true, false]);
