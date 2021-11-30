@@ -66,7 +66,7 @@ export class Puzzle extends Grid<Piece> {
   }
   public checkSolved() {
     return this.isSolvable()
-        && range(1, this.width * this.height).concat(0).every((n, i) => this.to1d()[i].id === n);
+        && range(1, this.width * this.height).concat(0).every((n, i) => this.to1d()[i].id === n)
   }
 
   public toString() {

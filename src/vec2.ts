@@ -20,21 +20,21 @@ export class Vec2 extends BoundArray<number> {
   }
 
   add(v: number | Vec2) {
-    const isInstance = v instanceof Vec2;
+    const isInstance = v instanceof Vec2
     return new Vec2(
       this.x + (isInstance ? (v as Vec2).x : (v as number)),
       this.y + (isInstance ? (v as Vec2).y : (v as number)),
-    );
+    )
   }
   sub(v: number | Vec2) {
     return this.add(v instanceof Vec2 ? v.mul(-1) : -v)
   }
   mul(v: number | Vec2) {
-    const isInstance = v instanceof Vec2;
+    const isInstance = v instanceof Vec2
     return new Vec2(
       this.x * (isInstance ? (v as Vec2).x : (v as number)),
       this.y * (isInstance ? (v as Vec2).y : (v as number)),
-    );
+    )
   }
 }
 

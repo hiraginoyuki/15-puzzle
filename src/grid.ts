@@ -23,7 +23,7 @@ export namespace GridUtil {
     )
   }
   export function toGrid<T>(items: T[], width: number, height: number): T[][] {
-    return [...Array(height)].map((_, y) => items.slice(y * width, (y + 1) * width));
+    return [...Array(height)].map((_, y) => items.slice(y * width, (y + 1) * width))
   }
 }
 

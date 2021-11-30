@@ -1,9 +1,9 @@
 import { GridUtil } from './grid'
 import { Piece, Puzzle } from './puzzle'
-import { range, repeat } from "./utils";
+import { range, repeat } from "./utils"
 import { chooseItem, chooseIndex } from './random'
 import { create } from 'random-seed'
-import { NotImplementedError } from './classes';
+import { NotImplementedError } from './classes'
 
 type Args =
   | []
@@ -24,14 +24,14 @@ export class RandomPuzzle extends Puzzle {
   }
 
   protected static _parseArgs(args: Args) {
-    const isSeedPassed = typeof args[0] === "string";
+    const isSeedPassed = typeof args[0] === "string"
     const seed   = isSeedPassed ? args[0] as string : `${+new Date}`
     const width  = isSeedPassed ? typeof args[1] === "number" ? args[1] : 4
     /*************************/ : typeof args[0] === "number" ? args[0] : 4
     const height = isSeedPassed ? typeof args[2] === "number" ? args[2] : width
     /*************************/ : typeof args[1] === "number" ? args[1] : width
 
-    return [ seed, width, height ] as const;
+    return [ seed, width, height ] as const
   }
   public static generate(): RandomPuzzle
   public static generate(size: number): RandomPuzzle
