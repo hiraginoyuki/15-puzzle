@@ -72,3 +72,4 @@ export class RandomPuzzle extends Puzzle {
     return puzzle
   }
 }
+

@@ -16,3 +16,4 @@ export function range(...args: number[]): number[] {
 export function repeat(times: number, func: (iteration: number) => any) {
   for (let i = 0; i < times; i++) func(i)
 }
+

@@ -3,3 +3,4 @@ export class NotImplementedError extends Error {
     super(`method .${method}() is not implemented`)
   }
 }
+

@@ -37,3 +37,4 @@ export class Vec2 extends BoundArray<number> {
     );
   }
 }
+

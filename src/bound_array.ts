@@ -19,3 +19,4 @@ Object.assign(BoundArray.prototype,
   Objects.fromKeys(notImplMethods, throwCurried),
   Objects.fromKeys(passThroughMethods, passThroughCurried),
 )
+

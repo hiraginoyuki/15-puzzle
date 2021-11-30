@@ -133,3 +133,4 @@ export class Puzzle extends Grid<Piece> {
     return tapData
   }
 }
+
