@@ -1,18 +1,24 @@
-class Vec2Base extends Array<number> {
-  readonly length = 2;
+import { BoundArray } from "./bound_array"
+
+export class Vec2 extends BoundArray<number> {
+  0: number
+  1: number
   constructor(
-    public x: number,
-    public y: number,
-  ) { super(x, y); }
-  get 0() { return this.x; }
-  get 1() { return this.y; }
-  set 0(v) { this.x = v; }
-  set 1(v) { this.y = v; }
-  toString() {
-    return `[${this.x}, ${this.y}]`;
+    x: number,
+    y: number,
+  ) { super(x, y) }
+  get x() { return this[0] }
+  get y() { return this[1] }
+  set x(v) { this[0] = v }
+  set y(v) { this[1] = v }
+
+  clone() {
+    return new Vec2(...this as [number, number])
   }
-}
-export class Vec2 extends Vec2Base {
+  equals(v: [number, number] | Vec2) {
+    return v[0] === this.x && v[1] === this.y
+  }
+
   add(v: number | Vec2) {
     const isInstance = v instanceof Vec2;
     return new Vec2(
@@ -20,14 +26,14 @@ export class Vec2 extends Vec2Base {
       this.y + (isInstance ? (v as Vec2).y : (v as number)),
     );
   }
+  sub(v: number | Vec2) {
+    return this.add(v instanceof Vec2 ? v.mul(-1) : -v)
+  }
   mul(v: number | Vec2) {
     const isInstance = v instanceof Vec2;
     return new Vec2(
       this.x * (isInstance ? (v as Vec2).x : (v as number)),
       this.y * (isInstance ? (v as Vec2).y : (v as number)),
     );
-  }
-  equalTo(vec: Vec2) {
-    return vec.x === this.x && vec.y === this.y;
   }
 }
