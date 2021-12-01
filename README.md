@@ -1,6 +1,6 @@
 # 15-puzzle 🧩
 [15-puzzle](https://github.com/HiraginoYuki/15-puzzle) is a simple 15 puzzle library with many useful features. 😎
-Current version (v6) is an innovative update! See [v6_release_note.md](about:blank) for more information. 😊
+> This release (v6) is an innovative update! See [v6_release_note.md](about:blank) for more information. 😊
 
 ## Usage
 
@@ -19,9 +19,6 @@ const { RandomPuzzle } = require('15-puzzle') // CommonJS
 
 You can generate a random valid puzzle using a static method called `generate()` 🎰✨.
 To specify the size, give a number for both width and height, two numbers for width and height respectively, or nothing for 4x4.
-See the [type definition](https://github.com/HiraginoYuki/15-puzzle/blob/52e012ac70c9d4b58cba22daeee2220809205574/src/random_puzzle.ts#L36-L41) to know what you can do. 🧐
-
-Here's an example:
 ```js
 import { RandomPuzzle } from '15-puzzle'
 
@@ -30,6 +27,7 @@ const bar = RandomPuzzle.generate(5)     // 5x5
 const baz = RandomPuzzle.generate(6, 7)  // 6x7
 ```
 
+> See the [type definition](https://github.com/HiraginoYuki/15-puzzle/blob/52e012ac70c9d4b58cba22daeee2220809205574/src/random_puzzle.ts#L36-L41) to learn what you can do. 🧐
 
 Now (actually since [v2.0.2](https://github.com/HiraginoYuki/15-puzzle/blob/d20e8fa0f415b9313d8b6fc4d8cc670b019e3bec/package.json#L24-L25) 😅), as we use [`random-seed`](https://www.npmjs.com/package/random-seed) to generate a puzzle, this feature is actually supported! 🎉
 Just give a seed as the first argument. A seed must be a string, and here's [why](https://github.com/HiraginoYuki/15-puzzle/blob/52e012ac70c9d4b58cba22daeee2220809205574/src/random_puzzle.ts#L27).
