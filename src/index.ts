@@ -1,1 +1,3 @@
-export { FifteenPuzzle, Pieces, Piece } from './15-puzzle';
+export { Piece, Puzzle, TapData } from './puzzle'
+export { RandomPuzzle } from './random_puzzle'
+
