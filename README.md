@@ -1,6 +1,5 @@
 # 15-puzzle 🧩
 [15-puzzle](https://github.com/HiraginoYuki/15-puzzle) is a simple 15 puzzle library with many useful features. 😎
-> This release (v6) is an innovative update! See [v6_release_note.md](about:blank) for more information. 😊
 
 ## Usage
 
