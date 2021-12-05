@@ -1,6 +1,6 @@
 {
   "name": "15-puzzle",
-  "version": "6.1.4",
+  "version": "6.1.5",
   "description": "A simple 15 puzzle library",
   "main": "dist/index.js",
   "scripts": {
