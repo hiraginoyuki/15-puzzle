@@ -1,4 +1,5 @@
 import { NotImplementedError } from './classes'
+import { OwnedEventEmitter } from './events'
 import { Grid, GridItem } from './grid'
 import { range, repeat } from './utils'
 import { Vec2 } from './vec2'
@@ -32,6 +33,7 @@ interface ToStringOptions {
   color?: number
 }
 export class Puzzle extends Grid<Piece> {
+  public readonly events: OwnedEventEmitter<Puzzle>
   public taps: TapData[] = []
   public constructor(pieces: Piece[][] | number[][]) {
     super(pieces[0][0] instanceof Piece 
@@ -40,6 +42,7 @@ export class Puzzle extends Grid<Piece> {
         new Piece(indexInRow, indexOfRow, indexOfRow * pieces[0].length + indexInRow, id as number)
       )))
     )
+    this.events = new OwnedEventEmitter(this)
   }
 
   public clone() {
@@ -160,6 +163,7 @@ export class Puzzle extends Grid<Piece> {
     }
 
     this.taps.push(tapData)
+    this.events.emit('tap', tapData)
 
     return tapData
   }
