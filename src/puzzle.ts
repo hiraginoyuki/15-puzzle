@@ -20,6 +20,12 @@ export interface TapData {
   piece: Piece
   movedPieces: Piece[]
 }
+
+interface ToStringOptions {
+  marginWidth?: number
+  marginHeight?: number
+  color?: number
+}
 export class Puzzle extends Grid<Piece> {
   public taps: TapData[] = []
   public constructor(pieces: Piece[][] | number[][]) {
@@ -69,12 +75,15 @@ export class Puzzle extends Grid<Piece> {
         && range(1, this.width * this.height).concat(0).every((n, i) => this.to1d()[i].id === n)
   }
 
-  public toString() {
+  public toString({ marginWidth, marginHeight, color }: ToStringOptions = {}) {
     const maxLength = Math.floor(Math.log(this.width * this.height - 1) / Math.log(10)) + 1
-    const separator = '+' + ('-'.repeat(maxLength) + '+').repeat(this.width)
-    return `${separator}\n` + this.map(
-      row => '|' + row.map(({ id }) => (id || '').toString().padStart(maxLength, ' ')).join('|') + '|'
-    ).join(`\n${separator}\n`) + `\n${separator}`
+    const separator = '+' + ('-'.repeat((marginWidth ?? 0) + maxLength + (marginWidth ?? 0)) + '+').repeat(this.width)
+    const blankSeparator = '+' + (' '.repeat((marginWidth ?? 0) + maxLength + (marginWidth ?? 0)) + '+').repeat(this.width)
+    return `${separator}\n` + this.map(row => (
+      `${blankSeparator}\n`.repeat(marginHeight ?? 0)
+    + '|' + row.map(({ id }) => ' '.repeat(marginWidth ?? 0) + (id || '').toString().padStart(maxLength, ' ') + ' '.repeat(marginWidth ?? 0)).join('|') + '|'
+    + `\n${blankSeparator}`.repeat(marginHeight ?? 0)
+    )).join(`\n${separator}\n`) + `\n${separator}`
   }
 
   public get(x: number, y: number): Piece
