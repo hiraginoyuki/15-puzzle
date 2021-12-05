@@ -78,7 +78,7 @@ export class Puzzle extends Grid<Piece> {
   public toString({ marginWidth, marginHeight, color }: ToStringOptions = {}) {
     const maxLength = Math.floor(Math.log(this.width * this.height - 1) / Math.log(10)) + 1
     const separator = '+' + ('-'.repeat((marginWidth ?? 0) + maxLength + (marginWidth ?? 0)) + '+').repeat(this.width)
-    const blankSeparator = '+' + (' '.repeat((marginWidth ?? 0) + maxLength + (marginWidth ?? 0)) + '+').repeat(this.width)
+    const blankSeparator = '|' + (' '.repeat((marginWidth ?? 0) + maxLength + (marginWidth ?? 0)) + '|').repeat(this.width)
     return `${separator}\n` + this.map(row => (
       `${blankSeparator}\n`.repeat(marginHeight ?? 0)
     + '|' + row.map(({ id }) => ' '.repeat(marginWidth ?? 0) + (id || '').toString().padStart(maxLength, ' ') + ' '.repeat(marginWidth ?? 0)).join('|') + '|'
