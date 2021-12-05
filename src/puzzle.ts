@@ -92,7 +92,7 @@ export class Puzzle extends Grid<Piece> {
 
     const grid = [ separator, ...Array(this.height).fill(Array(gridHeight).fill(row).concat(separator)).flat() ]
 
-    for (const row of this.map(row => row.reverse())) {
+    for (const row of this.map(row => row.slice().reverse())) {
       for (const piece of row) {
         const y1 = (1 + gridHeight) * piece.y + 1 + (marginHeight ?? 0)
         grid[y1] = insert(grid[y1], (piece.id || '').toString().padStart(maxLength, ' '), (1 + gridWidth) * piece.x + 1 + (marginWidth ?? 0), true)
