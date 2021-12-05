@@ -2,6 +2,7 @@ import { NotImplementedError } from './classes'
 import { Grid, GridItem } from './grid'
 import { range, repeat } from './utils'
 import { Vec2 } from './vec2'
+import { insert } from './strings'
 
 export class Piece extends GridItem {
   constructor(
@@ -10,6 +11,10 @@ export class Piece extends GridItem {
     index: number,
     public readonly id: number
   ) { super(x, y, index) }
+
+  isCorrect() {
+    return this.id === this.index + 1
+  }
 }
 export interface TapData {
   time: number
@@ -76,14 +81,31 @@ export class Puzzle extends Grid<Piece> {
   }
 
   public toString({ marginWidth, marginHeight, color }: ToStringOptions = {}) {
-    const maxLength = Math.floor(Math.log(this.width * this.height - 1) / Math.log(10)) + 1
-    const separator = '+' + ('-'.repeat((marginWidth ?? 0) + maxLength + (marginWidth ?? 0)) + '+').repeat(this.width)
-    const blankSeparator = '|' + (' '.repeat((marginWidth ?? 0) + maxLength + (marginWidth ?? 0)) + '|').repeat(this.width)
-    return `${separator}\n` + this.map(row => (
-      `${blankSeparator}\n`.repeat(marginHeight ?? 0)
-    + '|' + row.map(({ id }) => ' '.repeat(marginWidth ?? 0) + (id || '').toString().padStart(maxLength, ' ') + ' '.repeat(marginWidth ?? 0)).join('|') + '|'
-    + `\n${blankSeparator}`.repeat(marginHeight ?? 0)
-    )).join(`\n${separator}\n`) + `\n${separator}`
+    const flip = '\x1b[1;7m'
+    const reset = '\x1b[0m'
+
+    const maxLength  = Math.floor(Math.log(this.width * this.height - 1) / Math.log(10)) + 1
+    const gridWidth  = 2 * (marginWidth ?? 0) + maxLength
+    const gridHeight = 2 * (marginHeight ?? 0) + 1
+    const separator  = '+' + ('-'.repeat(gridWidth) + '+').repeat(this.width)
+    const row        = '|' + (' '.repeat(gridWidth) + '|').repeat(this.width)
+
+    const grid = [ separator, ...Array(this.height).fill(Array(gridHeight).fill(row).concat(separator)).flat() ]
+
+    for (const row of this.map(row => row.reverse())) {
+      for (const piece of row) {
+        const y1 = (1 + gridHeight) * piece.y + 1 + (marginHeight ?? 0)
+        grid[y1] = insert(grid[y1], (piece.id || '').toString().padStart(maxLength, ' '), (1 + gridWidth) * piece.x + 1 + (marginWidth ?? 0), true)
+
+        if (piece.isCorrect()) repeat(gridHeight, i => {
+          const y2 = (1 + gridHeight) * piece.y + 1 + i
+          grid[y2] = insert(grid[y2], reset, (1 + gridWidth) * piece.x + 1 + gridWidth)
+          grid[y2] = insert(grid[y2], flip, (1 + gridWidth) * piece.x + 1)
+        })
+      }
+    }
+
+    return grid.join('\n')
   }
 
   public get(x: number, y: number): Piece
