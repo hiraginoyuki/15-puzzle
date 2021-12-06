@@ -84,7 +84,7 @@ export class Puzzle extends Grid<Piece> {
   }
 
   public toString({ marginWidth, marginHeight, color }: ToStringOptions = {}) {
-    const flip = '\x1b[1;7m'
+    const flip = '\x1b[30;47m'
     const reset = '\x1b[0m'
 
     const maxLength  = Math.floor(Math.log(this.width * this.height - 1) / Math.log(10)) + 1
