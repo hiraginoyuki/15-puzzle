@@ -100,7 +100,7 @@ export class Puzzle extends Grid<Piece> {
         const y1 = (1 + gridHeight) * piece.y + 1 + (marginHeight ?? 0)
         grid[y1] = insert(grid[y1], (piece.id || '').toString().padStart(maxLength, ' '), (1 + gridWidth) * piece.x + 1 + (marginWidth ?? 0), true)
 
-        if (piece.isCorrect()) repeat(gridHeight, i => {
+        if (color && piece.isCorrect()) repeat(gridHeight, i => {
           const y2 = (1 + gridHeight) * piece.y + 1 + i
           grid[y2] = insert(grid[y2], reset, (1 + gridWidth) * piece.x + 1 + gridWidth)
           grid[y2] = insert(grid[y2], flip, (1 + gridWidth) * piece.x + 1)
