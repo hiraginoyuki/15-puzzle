@@ -114,8 +114,7 @@ export class Puzzle extends Grid<Piece> {
   public get(x: number, y: number): Piece
   public get(id: number): Piece
   public get(...args: number[]) {
-    // @ts-ignore
-    if (args.length === 2) return super.get(...args)
+    if (args.length === 2) return super.get(...(args as [number, number]))
     const [id] = args
     if (id < 0 || this.size <= id) throw new RangeError('invalid id')
     return this.to1d().find(piece => piece.id === id)
@@ -133,8 +132,7 @@ export class Puzzle extends Grid<Piece> {
     if (!Number.isInteger(y) || y < 0 || this.height <= y) throw new RangeError('y is out of range')
     const tappedPiece = this.get(x, y)
     const emptyPiece = this.get(0)
-    // @ts-ignore
-    if (!( emptyPiece.x === tappedPiece.x ^ emptyPiece.y === tappedPiece.y )) return null
+    if ((emptyPiece.x === tappedPiece.x) === (emptyPiece.y === tappedPiece.y)) return null
 
     const distance = Math.abs(emptyPiece.x - tappedPiece.x + emptyPiece.y - tappedPiece.y)
     const direction = new Vec2(
