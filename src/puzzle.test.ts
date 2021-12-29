@@ -21,14 +21,12 @@ describe('puzzle.ts', () => {
       [  9, 10, 11, 12 ],
       [ 13, 14, 15,  0 ],
     ]
-    // @ts-ignore
     const solvablePuzzleArr = [
       [  1,  2,  3,  4 ],
       [  5,  6,  7,  8 ],
       [  9, 10, 11, 12 ],
       [  0, 13, 14, 15 ],
     ]
-    // @ts-ignore
     const unsolvablePuzzleArr = [
       [  1,  2,  3,  4 ],
       [  5,  6,  7,  8 ],
