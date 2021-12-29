@@ -55,7 +55,7 @@ export class RandomPuzzle extends Puzzle {
 
     const puzzle = new this(GridUtil.toGrid(numbers.concat(unusedNumbers, 0), width, height), seed)
     if (!puzzle.isSolvable())
-      puzzle.swap(puzzle.to1d().at(-3) as Piece, puzzle.to1d().at(-2) as Piece)
+      puzzle.swap(puzzle.to1d().at(-3)!, puzzle.to1d().at(-2)!)
 
     const horizontalFirst = rndItem([true, false])
     if (horizontalFirst) {
