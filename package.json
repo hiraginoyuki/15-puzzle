@@ -4,6 +4,7 @@
   "description": "A simple 15 puzzle library",
   "main": "dist/index.js",
   "scripts": {
+    "fix": "ts-standard --fix",
     "test": "mocha --require ts-node/register 'src/*.test.ts'"
   },
   "repository": {
