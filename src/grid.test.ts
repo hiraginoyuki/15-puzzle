@@ -1,6 +1,5 @@
 import 'mocha'
 import { assert, expect } from 'chai'
-// @ts-expect-error
 import { GridUtil, GridItem, Grid } from '../src/grid'
 
 function map2d<T, U> (array: T[][], callback: (value: T, x: number, y: number, array: T[][]) => U): U[][] {
