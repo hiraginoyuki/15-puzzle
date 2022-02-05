@@ -1,7 +1,7 @@
-export function range(end: number): number[]
-export function range(start: number, end: number): number[]
-export function range(start: number, end: number, step: number): number[]
-export function range(...args: number[]): number[] {
+export function range (end: number): number[]
+export function range (start: number, end: number): number[]
+export function range (start: number, end: number, step: number): number[]
+export function range (...args: number[]): number[] {
   switch (args.length) {
     case 1:
       return range(0, args[0], 1)
@@ -13,7 +13,6 @@ export function range(...args: number[]): number[] {
   }
 }
 
-export function repeat(times: number, func: (iteration: number) => any) {
+export function repeat (times: number, func: (iteration: number) => any) {
   for (let i = 0; i < times; i++) func(i)
 }
-

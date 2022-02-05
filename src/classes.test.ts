@@ -3,7 +3,6 @@ import { expect } from 'chai'
 import { NotImplementedError } from './classes'
 
 describe('classes.ts', () => {
-
   describe('class NotImplementedError', () => {
     it('new NotImplementedError()', () => {
       const methodName = 'foo'
@@ -13,6 +12,4 @@ describe('classes.ts', () => {
         .and.have.property('message', `method .${methodName}() is not implemented`)
     })
   })
-
 })
-

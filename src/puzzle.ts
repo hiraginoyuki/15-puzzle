@@ -4,7 +4,7 @@ import { range, repeat } from './utils'
 import { Vec2 } from './vec2'
 
 export class Piece extends GridItem {
-  constructor(
+  constructor (
     x: number,
     y: number,
     index: number,
@@ -22,8 +22,8 @@ export interface TapData {
 }
 export class Puzzle extends Grid<Piece> {
   public taps: TapData[] = []
-  public constructor(pieces: Piece[][] | number[][]) {
-    super(pieces[0][0] instanceof Piece 
+  public constructor (pieces: Piece[][] | number[][]) {
+    super(pieces[0][0] instanceof Piece
       ? pieces as Piece[][]
       : pieces.map((row, indexOfRow) => row.map((id, indexInRow) => (
         new Piece(indexInRow, indexOfRow, indexOfRow * pieces[0].length + indexInRow, id as number)
@@ -31,21 +31,21 @@ export class Puzzle extends Grid<Piece> {
     )
   }
 
-  public clone() {
+  public clone () {
     if (Object.getPrototypeOf(this) !== Puzzle.prototype) throw new NotImplementedError('clone')
-    return new Puzzle( this.to2d().map(row => row.map(piece => piece.id)) )
+    return new Puzzle(this.to2d().map(row => row.map(piece => piece.id)))
   }
 
   public readonly timeGenerated = +new Date()
-  public get timeStarted() { return this.taps.length ? this.taps.at(0)!.time : null }
-  public get timeSolved() { return this.taps.length && this.isSolved() ? this.taps.at(-1)!.time : null }
+  public get timeStarted () { return (this.taps.length > 0) ? this.taps.at(0)!.time : null }
+  public get timeSolved () { return (this.taps.length > 0) && this.isSolved() ? this.taps.at(-1)!.time : null }
   protected _isSolvable: boolean | null = null
   protected _isSolving: boolean | null = null
   protected _isSolved: boolean | null = null
-  public isSolvable(): boolean | null { return this._isSolvable ??= this.checkSolvable() }
-  public isSolving(): boolean | null { return this._isSolving ??= this.checkSolving() }
-  public isSolved(): boolean | null { return this._isSolved ??= this.checkSolved() }
-  public checkSolvable() {
+  public isSolvable (): boolean | null { return this._isSolvable ??= this.checkSolvable() }
+  public isSolving (): boolean | null { return this._isSolving ??= this.checkSolving() }
+  public isSolved (): boolean | null { return this._isSolved ??= this.checkSolved() }
+  public checkSolvable () {
     const cloned = this.clone()
     if (!cloned.get(0).equals(new Vec2(cloned.width - 1, cloned.height - 1))) {
       cloned.tap(cloned.width - 1, cloned.get(0).y)
@@ -61,15 +61,17 @@ export class Puzzle extends Grid<Piece> {
     }, 0)
     return swapCount % 2 === 0
   }
-  public checkSolving() {
+
+  public checkSolving () {
     return this.timeStarted !== null && this.timeSolved === null
   }
-  public checkSolved() {
-    return this.isSolvable()
-        && range(1, this.width * this.height).concat(0).every((n, i) => this.to1d()[i].id === n)
+
+  public checkSolved () {
+    return this.isSolvable() &&
+        range(1, this.width * this.height).concat(0).every((n, i) => this.to1d()[i].id === n)
   }
 
-  public toString() {
+  public toString () {
     const maxLength = Math.floor(Math.log(this.width * this.height - 1) / Math.log(10)) + 1
     const separator = '+' + ('-'.repeat(maxLength) + '+').repeat(this.width)
     return `${separator}\n` + this.map(
@@ -77,35 +79,35 @@ export class Puzzle extends Grid<Piece> {
     ).join(`\n${separator}\n`) + `\n${separator}`
   }
 
-  public get(x: number, y: number): Piece
-  public get(id: number): Piece
-  public get(...args: number[]) {
-    // @ts-ignore
+  public get (x: number, y: number): Piece
+  public get (id: number): Piece
+  public get (...args: number[]) {
+    // @ts-expect-error
     if (args.length === 2) return super.get(...args)
     const [id] = args
     if (id < 0 || this.size <= id) throw new RangeError('invalid id')
     return this.to1d().find(piece => piece.id === id)
   }
 
-  public set(x: number, y: number, piece: Piece) {
+  public set (x: number, y: number, piece: Piece) {
     this._isSolvable = null
     this._isSolving = null
     this._isSolved = null
     return super.set(x, y, piece)
   }
 
-  public tap(x: number, y: number) {
+  public tap (x: number, y: number) {
     if (!Number.isInteger(x) || x < 0 || this.width <= x) throw new RangeError('x is out of range')
     if (!Number.isInteger(y) || y < 0 || this.height <= y) throw new RangeError('y is out of range')
     const tappedPiece = this.get(x, y)
     const emptyPiece = this.get(0)
-    // @ts-ignore
-    if (!( emptyPiece.x === tappedPiece.x ^ emptyPiece.y === tappedPiece.y )) return null
+    // @ts-expect-error
+    if (!(emptyPiece.x === tappedPiece.x ^ emptyPiece.y === tappedPiece.y)) return null
 
     const distance = Math.abs(emptyPiece.x - tappedPiece.x + emptyPiece.y - tappedPiece.y)
     const direction = new Vec2(
       -(tappedPiece.x < emptyPiece.x) + +(emptyPiece.x < tappedPiece.x),
-      -(tappedPiece.y < emptyPiece.y) + +(emptyPiece.y < tappedPiece.y),
+      -(tappedPiece.y < emptyPiece.y) + +(emptyPiece.y < tappedPiece.y)
     )
 
     const movedPieces: Piece[] = []
@@ -114,7 +116,7 @@ export class Puzzle extends Grid<Piece> {
       const emptyPiece = this.get(0)
       const movedPiece = this.get(...emptyPiece.add(direction) as [number, number])
       movedPieces.push(movedPiece)
-      this.swap(movedPiece, emptyPiece) 
+      this.swap(movedPiece, emptyPiece)
     })
 
     const time = +new Date()
@@ -133,4 +135,3 @@ export class Puzzle extends Grid<Piece> {
     return tapData
   }
 }
-

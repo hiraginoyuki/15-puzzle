@@ -2,38 +2,37 @@ import 'mocha'
 import { assert, expect } from 'chai'
 import { Piece, Puzzle } from '../src/puzzle'
 
-function to2dNumbers(puzzle: Puzzle) {
+function to2dNumbers (puzzle: Puzzle) {
   return puzzle.to2d().map(row => row.map(({ id }) => id))
 }
 
 describe('puzzle.ts', () => {
-
   describe('class Piece', () => {
     it('new Piece()', () => {
-      expect( new Piece(1, 2, 3, 4) ).to.deep.equal(Object.assign([1, 2], { x: 1, y: 2, index: 3, id: 4 }))
+      expect(new Piece(1, 2, 3, 4)).to.deep.equal(Object.assign([1, 2], { x: 1, y: 2, index: 3, id: 4 }))
     })
   })
 
   describe('class Puzzle', () => {
     const solvedPuzzleArr = [
-      [  1,  2,  3,  4 ],
-      [  5,  6,  7,  8 ],
-      [  9, 10, 11, 12 ],
-      [ 13, 14, 15,  0 ],
+      [1, 2, 3, 4],
+      [5, 6, 7, 8],
+      [9, 10, 11, 12],
+      [13, 14, 15, 0]
     ]
-    // @ts-ignore
+    // @ts-expect-error
     const solvablePuzzleArr = [
-      [  1,  2,  3,  4 ],
-      [  5,  6,  7,  8 ],
-      [  9, 10, 11, 12 ],
-      [  0, 13, 14, 15 ],
+      [1, 2, 3, 4],
+      [5, 6, 7, 8],
+      [9, 10, 11, 12],
+      [0, 13, 14, 15]
     ]
-    // @ts-ignore
+    // @ts-expect-error
     const unsolvablePuzzleArr = [
-      [  1,  2,  3,  4 ],
-      [  5,  6,  7,  8 ],
-      [  9, 10, 11, 12 ],
-      [ 13, 15, 14,  0 ],
+      [1, 2, 3, 4],
+      [5, 6, 7, 8],
+      [9, 10, 11, 12],
+      [13, 15, 14, 0]
     ]
 
     it('Puzzle.prototype.constructor()', () => {
@@ -88,7 +87,7 @@ describe('puzzle.ts', () => {
       expect(solvablePuzzle.isSolvable()).to.be.true
       expect(solvablePuzzle.isSolving()).to.be.false
       expect(solvablePuzzle.isSolved()).to.be.false
-      
+
       expect(unsolvablePuzzle).to.have.a.property('timeGenerated').that.is.a('number')
       expect(unsolvablePuzzle).to.have.a.property('timeStarted', null)
       expect(unsolvablePuzzle).to.have.a.property('timeSolved', null)
@@ -97,12 +96,12 @@ describe('puzzle.ts', () => {
       expect(unsolvablePuzzle.isSolving()).to.be.false
       expect(unsolvablePuzzle.isSolved()).to.be.false
 
-      expect( solvablePuzzle.tap(0, 3) ).to.be.not.ok
+      expect(solvablePuzzle.tap(0, 3)).to.be.not.ok
       expect(to2dNumbers(solvablePuzzle)).to.deep.equal([
-        [  1,  2,  3,  4 ],
-        [  5,  6,  7,  8 ],
-        [  9, 10, 11, 12 ],
-        [  0, 13, 14, 15 ],
+        [1, 2, 3, 4],
+        [5, 6, 7, 8],
+        [9, 10, 11, 12],
+        [0, 13, 14, 15]
       ])
       expect(solvablePuzzle).to.have.a.property('timeGenerated').that.is.a('number')
       expect(solvablePuzzle).to.have.a.property('timeStarted').that.is.null
@@ -112,12 +111,12 @@ describe('puzzle.ts', () => {
       expect(solvablePuzzle.isSolving()).to.be.false
       expect(solvablePuzzle.isSolved()).to.be.false
 
-      expect( solvablePuzzle.tap(1, 3) ).to.be.ok
+      expect(solvablePuzzle.tap(1, 3)).to.be.ok
       expect(to2dNumbers(solvablePuzzle)).to.deep.equal([
-        [  1,  2,  3,  4 ],
-        [  5,  6,  7,  8 ],
-        [  9, 10, 11, 12 ],
-        [ 13,  0, 14, 15 ],
+        [1, 2, 3, 4],
+        [5, 6, 7, 8],
+        [9, 10, 11, 12],
+        [13, 0, 14, 15]
       ])
       expect(solvablePuzzle).to.have.a.property('timeGenerated').that.is.a('number')
       expect(solvablePuzzle).to.have.a.property('timeStarted').that.is.a('number')
@@ -131,12 +130,12 @@ describe('puzzle.ts', () => {
         expect(delta).to.be.a('number').that.is.equal(time - (solvablePuzzle.taps[i - 1]?.time ?? solvablePuzzle.timeGenerated))
       })
 
-      expect( solvablePuzzle.tap(2, 3) ).to.be.ok
+      expect(solvablePuzzle.tap(2, 3)).to.be.ok
       expect(to2dNumbers(solvablePuzzle)).to.deep.equal([
-        [  1,  2,  3,  4 ],
-        [  5,  6,  7,  8 ],
-        [  9, 10, 11, 12 ],
-        [ 13, 14,  0, 15 ],
+        [1, 2, 3, 4],
+        [5, 6, 7, 8],
+        [9, 10, 11, 12],
+        [13, 14, 0, 15]
       ])
       expect(solvablePuzzle).to.have.a.property('timeGenerated').that.is.a('number')
       expect(solvablePuzzle).to.have.a.property('timeStarted').that.is.a('number')
@@ -150,12 +149,12 @@ describe('puzzle.ts', () => {
         expect(delta).to.be.a('number').that.is.equal(time - (solvablePuzzle.taps[i - 1]?.time ?? solvablePuzzle.timeGenerated))
       })
 
-      expect( solvablePuzzle.tap(3, 3) ).to.be.ok
+      expect(solvablePuzzle.tap(3, 3)).to.be.ok
       expect(to2dNumbers(solvablePuzzle)).to.deep.equal([
-        [  1,  2,  3,  4 ],
-        [  5,  6,  7,  8 ],
-        [  9, 10, 11, 12 ],
-        [ 13, 14, 15,  0 ],
+        [1, 2, 3, 4],
+        [5, 6, 7, 8],
+        [9, 10, 11, 12],
+        [13, 14, 15, 0]
       ])
       expect(solvablePuzzle).to.have.a.property('timeGenerated').that.is.a('number')
       expect(solvablePuzzle).to.have.a.property('timeStarted').that.is.a('number')
@@ -169,8 +168,5 @@ describe('puzzle.ts', () => {
         expect(delta).to.be.a('number').that.is.equal(time - (solvablePuzzle.taps[i - 1]?.time ?? solvablePuzzle.timeGenerated))
       })
     })
-
   })
-
 })
-
