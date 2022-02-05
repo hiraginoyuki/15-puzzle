@@ -1,6 +1,5 @@
 export class NotImplementedError extends Error {
-  constructor(method: string) {
+  constructor (method: string) {
     super(`method .${method}() is not implemented`)
   }
 }
-

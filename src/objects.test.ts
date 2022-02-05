@@ -3,7 +3,6 @@ import { expect } from 'chai'
 import { fromKeys } from '../src/objects'
 
 describe('objects.ts', () => {
-  
   describe('function fromKeys', () => {
     it('fromKeys()', () => {
       expect(
@@ -17,6 +16,4 @@ describe('objects.ts', () => {
       })
     })
   })
-
 })
-

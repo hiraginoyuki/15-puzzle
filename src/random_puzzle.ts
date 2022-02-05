@@ -1,6 +1,6 @@
 import { GridUtil } from './grid'
 import { Piece, Puzzle } from './puzzle'
-import { range, repeat } from "./utils"
+import { range, repeat } from './utils'
 import { chooseItem, chooseIndex } from './random'
 import { create } from 'random-seed'
 import { NotImplementedError } from './classes'
@@ -14,37 +14,36 @@ type Args =
   | [string, number, number]
 
 export class RandomPuzzle extends Puzzle {
-  public constructor(pieces: Piece[][] | number[][], public seed: string) {
+  public constructor (pieces: Piece[][] | number[][], public seed: string) {
     super(pieces)
   }
-  
-  public clone() {
+
+  public clone (): RandomPuzzle {
     if (Object.getPrototypeOf(this) !== RandomPuzzle.prototype) throw new NotImplementedError('clone')
-    return new RandomPuzzle( this.to2d().map(row => row.map(piece => piece.id)), this.seed )
+    return new RandomPuzzle(this.to2d().map(row => row.map(piece => piece.id)), this.seed)
   }
 
-  protected static _parseArgs(args: Args) {
-    const isSeedPassed = typeof args[0] === "string"
-    const seed   = isSeedPassed ? args[0] as string : `${+new Date}`
-    const width  = isSeedPassed ? typeof args[1] === "number" ? args[1] : 4
-    /*************************/ : typeof args[0] === "number" ? args[0] : 4
-    const height = isSeedPassed ? typeof args[2] === "number" ? args[2] : width
-    /*************************/ : typeof args[1] === "number" ? args[1] : width
+  protected static _parseArgs (args: Args): readonly [string, number, number] {
+    const isSeedPassed = typeof args[0] === 'string'
+    const seed = isSeedPassed ? args[0] as string : `${+new Date()}`
+    const width = isSeedPassed ? typeof args[1] === 'number' ? args[1] : 4 : typeof args[0] === 'number' ? args[0] : 4
+    const height = isSeedPassed ? typeof args[2] === 'number' ? args[2] : width : typeof args[1] === 'number' ? args[1] : width
 
-    return [ seed, width, height ] as const
+    return [seed, width, height] as const
   }
-  public static generate(): RandomPuzzle
-  public static generate(size: number): RandomPuzzle
-  public static generate(width: number, height: number): RandomPuzzle
-  public static generate(seed: string): RandomPuzzle
-  public static generate(seed: string, size: number): RandomPuzzle
-  public static generate(seed: string, width: number, height: number): RandomPuzzle
-  public static generate(...args: Args) {
-    const [ seed, width, height ] = this._parseArgs(args)
+
+  public static generate (): RandomPuzzle
+  public static generate (size: number): RandomPuzzle
+  public static generate (width: number, height: number): RandomPuzzle
+  public static generate (seed: string): RandomPuzzle
+  public static generate (seed: string, size: number): RandomPuzzle
+  public static generate (seed: string, width: number, height: number): RandomPuzzle
+  public static generate (...args: Args): RandomPuzzle {
+    const [seed, width, height] = this._parseArgs(args)
 
     const randomSeed = create(seed)
-    const rndItem = <T>(array: T[]) => chooseItem(array, () => randomSeed.random())
-    const rndIndex = <T>(array: T[]) => chooseIndex(array, () => randomSeed.random())
+    const rndItem = <T>(array: T[]): T => chooseItem(array, () => randomSeed.random())
+    const rndIndex = <T>(array: T[]): number => chooseIndex(array, () => randomSeed.random())
 
     const size = width * height
     const numbers: number[] = []
@@ -54,9 +53,9 @@ export class RandomPuzzle extends Puzzle {
       numbers.push(unusedNumbers.splice(rndIndex(unusedNumbers), 1)[0]))
 
     const puzzle = new this(GridUtil.toGrid(numbers.concat(unusedNumbers, 0), width, height), seed)
-    if (!puzzle.isSolvable())
-      // @ts-ignore
-      puzzle.swap(puzzle.to1d().at(-3), puzzle.to1d().at(-2))
+    if (!puzzle.isSolvable()) {
+      puzzle.swap(puzzle.to1d().at(-3) as Piece, puzzle.to1d().at(-2) as Piece)
+    }
 
     const horizontalFirst = rndItem([true, false])
     if (horizontalFirst) {
@@ -72,4 +71,3 @@ export class RandomPuzzle extends Puzzle {
     return puzzle
   }
 }
-
