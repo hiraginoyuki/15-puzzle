@@ -18,18 +18,16 @@ export class RandomPuzzle extends Puzzle {
     super(pieces)
   }
 
-  public clone () {
+  public clone (): RandomPuzzle {
     if (Object.getPrototypeOf(this) !== RandomPuzzle.prototype) throw new NotImplementedError('clone')
     return new RandomPuzzle(this.to2d().map(row => row.map(piece => piece.id)), this.seed)
   }
 
-  protected static _parseArgs (args: Args) {
+  protected static _parseArgs (args: Args): readonly [string, number, number] {
     const isSeedPassed = typeof args[0] === 'string'
     const seed = isSeedPassed ? args[0] as string : `${+new Date()}`
-    const width = isSeedPassed ? typeof args[1] === 'number' ? args[1] : 4
-    /*************************/ : typeof args[0] === 'number' ? args[0] : 4
-    const height = isSeedPassed ? typeof args[2] === 'number' ? args[2] : width
-    /*************************/ : typeof args[1] === 'number' ? args[1] : width
+    const width = isSeedPassed ? typeof args[1] === 'number' ? args[1] : 4 : typeof args[0] === 'number' ? args[0] : 4
+    const height = isSeedPassed ? typeof args[2] === 'number' ? args[2] : width : typeof args[1] === 'number' ? args[1] : width
 
     return [seed, width, height] as const
   }
@@ -40,12 +38,12 @@ export class RandomPuzzle extends Puzzle {
   public static generate (seed: string): RandomPuzzle
   public static generate (seed: string, size: number): RandomPuzzle
   public static generate (seed: string, width: number, height: number): RandomPuzzle
-  public static generate (...args: Args) {
+  public static generate (...args: Args): RandomPuzzle {
     const [seed, width, height] = this._parseArgs(args)
 
     const randomSeed = create(seed)
-    const rndItem = <T>(array: T[]) => chooseItem(array, () => randomSeed.random())
-    const rndIndex = <T>(array: T[]) => chooseIndex(array, () => randomSeed.random())
+    const rndItem = <T>(array: T[]): T => chooseItem(array, () => randomSeed.random())
+    const rndIndex = <T>(array: T[]): number => chooseIndex(array, () => randomSeed.random())
 
     const size = width * height
     const numbers: number[] = []
@@ -55,9 +53,9 @@ export class RandomPuzzle extends Puzzle {
       numbers.push(unusedNumbers.splice(rndIndex(unusedNumbers), 1)[0]))
 
     const puzzle = new this(GridUtil.toGrid(numbers.concat(unusedNumbers, 0), width, height), seed)
-    if (!puzzle.isSolvable())
-    // @ts-expect-error
-    { puzzle.swap(puzzle.to1d().at(-3), puzzle.to1d().at(-2)) }
+    if (!puzzle.isSolvable()) {
+      puzzle.swap(puzzle.to1d().at(-3) as Piece, puzzle.to1d().at(-2) as Piece)
+    }
 
     const horizontalFirst = chooseItem([true, false])
     if (horizontalFirst) {

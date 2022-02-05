@@ -7,12 +7,13 @@ export function range (...args: number[]): number[] {
       return range(0, args[0], 1)
     case 2:
       return range(args[0], args[1], 1)
-    default:
+    default: {
       const [start, end, step] = args
       return [...Array(Math.ceil((end - start) / step))].map((v: number, i: number) => start + i * step)
+    }
   }
 }
 
-export function repeat (times: number, func: (iteration: number) => any) {
+export function repeat (times: number, func: (iteration: number) => any): void {
   for (let i = 0; i < times; i++) func(i)
 }
