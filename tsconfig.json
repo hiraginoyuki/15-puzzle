@@ -8,6 +8,7 @@
     "alwaysStrict": true,
     "declaration": true,
     "sourceMap": true,
+    "allowJs": true,
     "moduleResolution": "node",
     "outDir": "dist",
     "module": "commonjs",

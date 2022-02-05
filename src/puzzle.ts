@@ -1,7 +1,9 @@
 import { NotImplementedError } from './classes'
+import { OwnedEventEmitter } from './events'
 import { Grid, GridItem } from './grid'
 import { range, repeat } from './utils'
 import { Vec2 } from './vec2'
+import { insert } from './strings'
 
 export class Piece extends GridItem {
   constructor (
@@ -10,6 +12,10 @@ export class Piece extends GridItem {
     index: number,
     public readonly id: number
   ) { super(x, y, index) }
+
+  isCorrect () {
+    return this.id === this.index + 1
+  }
 }
 
 export interface TapData {
@@ -22,7 +28,13 @@ export interface TapData {
   movedPieces: Piece[]
 }
 
+interface ToStringOptions {
+  marginWidth?: number
+  marginHeight?: number
+  color?: number
+}
 export class Puzzle extends Grid<Piece> {
+  public readonly events: OwnedEventEmitter<Puzzle>
   public taps: TapData[] = []
   public constructor (pieces: Piece[][] | number[][]) {
     super(pieces[0][0] instanceof Piece
@@ -31,6 +43,7 @@ export class Puzzle extends Grid<Piece> {
         new Piece(indexInRow, indexOfRow, indexOfRow * pieces[0].length + indexInRow, id as number)
       )))
     )
+    this.events = new OwnedEventEmitter(this)
   }
 
   public clone (): Puzzle {
@@ -95,12 +108,32 @@ export class Puzzle extends Grid<Piece> {
         range(1, this.width * this.height).concat(0).every((n, i) => this.to1d()[i].id === n)
   }
 
-  public toString (): string {
+  public toString ({ marginWidth, marginHeight, color }: ToStringOptions = {}) {
+    const flip = '\x1b[30;47m'
+    const reset = '\x1b[0m'
+
     const maxLength = Math.floor(Math.log(this.width * this.height - 1) / Math.log(10)) + 1
-    const separator = '+' + ('-'.repeat(maxLength) + '+').repeat(this.width)
-    return `${separator}\n` + this.map(
-      row => '|' + row.map(({ id }) => (id ?? '').toString().padStart(maxLength, ' ')
-      ).join('|') + '|').join(`\n${separator}\n`) + `\n${separator}`
+    const gridWidth = 2 * (marginWidth ?? 0) + maxLength
+    const gridHeight = 2 * (marginHeight ?? 0) + 1
+    const separator = '+' + ('-'.repeat(gridWidth) + '+').repeat(this.width)
+    const row = '|' + (' '.repeat(gridWidth) + '|').repeat(this.width)
+
+    const grid = [separator, ...Array(this.height).fill(Array(gridHeight).fill(row).concat(separator)).flat()]
+
+    for (const row of this.map(row => row.slice().reverse())) {
+      for (const piece of row) {
+        const y1 = (1 + gridHeight) * piece.y + 1 + (marginHeight ?? 0)
+        grid[y1] = insert(grid[y1], (piece.id || '').toString().padStart(maxLength, ' '), (1 + gridWidth) * piece.x + 1 + (marginWidth ?? 0), true)
+
+        if (color && piece.isCorrect()) {repeat(gridHeight, i => {
+          const y2 = (1 + gridHeight) * piece.y + 1 + i
+          grid[y2] = insert(grid[y2], reset, (1 + gridWidth) * piece.x + 1 + gridWidth)
+          grid[y2] = insert(grid[y2], flip, (1 + gridWidth) * piece.x + 1)
+        })}
+      }
+    }
+
+    return grid.join('\n')
   }
 
   public get (x: number, y: number): Piece
@@ -155,6 +188,7 @@ export class Puzzle extends Grid<Piece> {
     }
 
     this.taps.push(tapData)
+    this.events.emit('tap', tapData)
 
     return tapData
   }

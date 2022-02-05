@@ -57,7 +57,7 @@ export class RandomPuzzle extends Puzzle {
       puzzle.swap(puzzle.to1d().at(-3) as Piece, puzzle.to1d().at(-2) as Piece)
     }
 
-    const horizontalFirst = chooseItem([true, false])
+    const horizontalFirst = rndItem([true, false])
     if (horizontalFirst) {
       puzzle.tap(rndItem(range(puzzle.width)), puzzle.height - 1)
       puzzle.tap(puzzle.get(0).x, rndItem(range(puzzle.height)))
