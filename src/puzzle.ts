@@ -13,7 +13,7 @@ export class Piece extends GridItem {
     public readonly id: number
   ) { super(x, y, index) }
 
-  isCorrect () {
+  isCorrect (): boolean {
     return this.id === this.index + 1
   }
 }
@@ -108,7 +108,7 @@ export class Puzzle extends Grid<Piece> {
         range(1, this.width * this.height).concat(0).every((n, i) => this.to1d()[i].id === n)
   }
 
-  public toString ({ marginWidth, marginHeight, color }: ToStringOptions = {}) {
+  public toString ({ marginWidth, marginHeight, color }: ToStringOptions = {}): string {
     const flip = '\x1b[30;47m'
     const reset = '\x1b[0m'
 
@@ -123,13 +123,15 @@ export class Puzzle extends Grid<Piece> {
     for (const row of this.map(row => row.slice().reverse())) {
       for (const piece of row) {
         const y1 = (1 + gridHeight) * piece.y + 1 + (marginHeight ?? 0)
-        grid[y1] = insert(grid[y1], (piece.id || '').toString().padStart(maxLength, ' '), (1 + gridWidth) * piece.x + 1 + (marginWidth ?? 0), true)
+        grid[y1] = insert(grid[y1], (piece.id ?? '').toString().padStart(maxLength, ' '), (1 + gridWidth) * piece.x + 1 + (marginWidth ?? 0), true)
 
-        if (color && piece.isCorrect()) {repeat(gridHeight, i => {
-          const y2 = (1 + gridHeight) * piece.y + 1 + i
-          grid[y2] = insert(grid[y2], reset, (1 + gridWidth) * piece.x + 1 + gridWidth)
-          grid[y2] = insert(grid[y2], flip, (1 + gridWidth) * piece.x + 1)
-        })}
+        if (color !== undefined && piece.isCorrect()) {
+          repeat(gridHeight, i => {
+            const y2 = (1 + gridHeight) * piece.y + 1 + i
+            grid[y2] = insert(grid[y2], reset, (1 + gridWidth) * piece.x + 1 + gridWidth)
+            grid[y2] = insert(grid[y2], flip, (1 + gridWidth) * piece.x + 1)
+          })
+        }
       }
     }
 
