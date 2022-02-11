@@ -4,6 +4,8 @@ import { GridUtil } from './grid'
 import { range } from './utils'
 import { insert } from './strings'
 
+const { getX, getY, getIndex } = GridUtil
+
 export interface TapData {
   time: number
   delta: number
@@ -83,7 +85,7 @@ export class Puzzle extends Array<number> {
   public checkSolvable (): boolean {
     const cloned = new Puzzle(this, this.width)
     if (cloned.at(-1) !== 0) {
-      cloned.tap(cloned.width - 1, GridUtil.getY(cloned.indexOf(0), cloned.width))
+      cloned.tap(cloned.width - 1, getY(cloned.indexOf(0), cloned.width))
       cloned.tap(cloned.width - 1, cloned.height - 1)
     }
     let isEven = true
@@ -128,7 +130,7 @@ export class Puzzle extends Array<number> {
       row.forEach((id, x) => {
         const y1 = (1 + gridHeight) * y + 1 + (marginHeight ?? 0)
         grid[y1] = insert(grid[y1], (id ?? '').toString().padStart(maxLength, ' '), (1 + gridWidth) * x + 1 + (marginWidth ?? 0), true)
-        const index = GridUtil.getIndex(x, y, this.width)
+        const index = getIndex(x, y, this.width)
 
         if (color !== undefined && id - 1 === index) {
           for (let i = 0; i < gridHeight; i++) {
@@ -148,7 +150,7 @@ export class Puzzle extends Array<number> {
     this._2d = null
     this._isSolving = null
     this._isSolved = null
-    this[GridUtil.getIndex(x, y, this.width)] = piece
+    this[getIndex(x, y, this.width)] = piece
     return this
   }
 
@@ -156,13 +158,13 @@ export class Puzzle extends Array<number> {
     if (!Number.isInteger(x) || x < 0 || this.width <= x) throw new RangeError('x is out of range')
     if (!Number.isInteger(y) || y < 0 || this.height <= y) throw new RangeError('y is out of range')
     const emptyPieceIndex = this.indexOf(0)
-    const emptyPieceX = GridUtil.getX(emptyPieceIndex, this.width)
-    const emptyPieceY = GridUtil.getY(emptyPieceIndex, this.width)
+    const emptyPieceX = getX(emptyPieceIndex, this.width)
+    const emptyPieceY = getY(emptyPieceIndex, this.width)
     const isSameX = emptyPieceX === x
     if (isSameX === (emptyPieceY === y)) return null
 
     let movedPieces: MovedPiece[]
-    const tappedPieceIndex = GridUtil.getIndex(x, y, this.width)
+    const tappedPieceIndex = getIndex(x, y, this.width)
     if (isSameX) {
       let index = emptyPieceIndex
       movedPieces = []

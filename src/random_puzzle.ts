@@ -5,6 +5,8 @@ import { chooseItem, chooseIndex } from './random'
 import { create } from 'random-seed'
 import { NotImplementedError } from './classes'
 
+const { getX, getY, toGrid } = GridUtil
+
 type Args =
   | []
   | [number]
@@ -53,7 +55,7 @@ export class RandomPuzzle extends Puzzle {
       numbers.push(unusedNumbers.splice(rndIndex(unusedNumbers), 1)[0])
     }
 
-    const puzzle = new RandomPuzzle(GridUtil.toGrid(numbers.concat(unusedNumbers, 0), width, height), seed)
+    const puzzle = new RandomPuzzle(toGrid(numbers.concat(unusedNumbers, 0), width, height), seed)
     if (!puzzle.isSolvable()) {
       const tmp = puzzle[size - 3]
       puzzle[size - 3] = puzzle[size - 2]
@@ -67,10 +69,10 @@ export class RandomPuzzle extends Puzzle {
     const horizontalFirst = rndItem([true, false])
     if (horizontalFirst) {
       puzzle.tap(rndItem(range(puzzle.width)), puzzle.height - 1)
-      puzzle.tap(GridUtil.getX(puzzle.indexOf(0), puzzle.width), rndItem(range(puzzle.height)))
+      puzzle.tap(getX(puzzle.indexOf(0), puzzle.width), rndItem(range(puzzle.height)))
     } else {
       puzzle.tap(puzzle.width - 1, rndItem(range(puzzle.height)))
-      puzzle.tap(rndItem(range(puzzle.width)), GridUtil.getY(puzzle.indexOf(0), puzzle.width))
+      puzzle.tap(rndItem(range(puzzle.width)), getY(puzzle.indexOf(0), puzzle.width))
     }
 
     randomSeed.done()
