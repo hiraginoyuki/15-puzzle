@@ -1,5 +1,5 @@
 import { GridUtil } from './grid'
-import { Piece, Puzzle } from './puzzle'
+import { Puzzle } from './puzzle'
 import { range, repeat } from './utils'
 import { chooseItem, chooseIndex } from './random'
 import { create } from 'random-seed'
@@ -14,13 +14,13 @@ type Args =
   | [string, number, number]
 
 export class RandomPuzzle extends Puzzle {
-  public constructor (pieces: Piece[][] | number[][], public seed: string) {
-    super(pieces)
+  public constructor (pieces: number[][], public seed: string) {
+    super(pieces.flat(), pieces[0].length)
   }
 
   public clone (): RandomPuzzle {
     if (Object.getPrototypeOf(this) !== RandomPuzzle.prototype) throw new NotImplementedError('clone')
-    return new RandomPuzzle(this.to2d().map(row => row.map(piece => piece.id)), this.seed)
+    return new RandomPuzzle(this.to2d(), this.seed)
   }
 
   protected static _parseArgs (args: Args): readonly [string, number, number] {
@@ -54,16 +54,22 @@ export class RandomPuzzle extends Puzzle {
 
     const puzzle = new this(GridUtil.toGrid(numbers.concat(unusedNumbers, 0), width, height), seed)
     if (!puzzle.isSolvable()) {
-      puzzle.swap(puzzle.to1d().at(-3) as Piece, puzzle.to1d().at(-2) as Piece)
+      const tmp = puzzle[size - 3]
+      puzzle[size - 3] = puzzle[size - 2]
+      puzzle[size - 2] = tmp
+      puzzle._isSolvable = null
+      puzzle._2d = null
+      puzzle._isSolving = null
+      puzzle._isSolved = null
     }
 
     const horizontalFirst = rndItem([true, false])
     if (horizontalFirst) {
       puzzle.tap(rndItem(range(puzzle.width)), puzzle.height - 1)
-      puzzle.tap(puzzle.get(0).x, rndItem(range(puzzle.height)))
+      puzzle.tap(GridUtil.getX(puzzle.indexOf(0), puzzle.width), rndItem(range(puzzle.height)))
     } else {
       puzzle.tap(puzzle.width - 1, rndItem(range(puzzle.height)))
-      puzzle.tap(rndItem(range(puzzle.width)), puzzle.get(0).y)
+      puzzle.tap(rndItem(range(puzzle.width)), GridUtil.getY(puzzle.indexOf(0), puzzle.width))
     }
 
     randomSeed.done()
