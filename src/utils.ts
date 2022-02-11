@@ -11,7 +11,7 @@ export function range (...args: number[]): number[] {
       return range(args[0], args[1], 1)
     default: {
       const [start, end, step] = args
-      return [...Array(ceil((end - start) / step))].map((v: number, i: number) => start + i * step)
+      return [...new Array(ceil((end - start) / step))].map((v: number, i: number) => start + i * step)
     }
   }
 }

@@ -123,7 +123,7 @@ export class Puzzle extends Array<number> {
     const separator = '+' + ('-'.repeat(gridWidth) + '+').repeat(this.width)
     const row = '|' + (' '.repeat(gridWidth) + '|').repeat(this.width)
 
-    const grid = [separator, ...Array(this.height).fill(Array(gridHeight).fill(row).concat(separator)).flat()]
+    const grid = [separator, ...new Array(this.height).fill(new Array(gridHeight).fill(row).concat(separator)).flat()]
 
     this.to2d().map(row => row.slice().reverse()).forEach((row, y) => {
       row.forEach((id, x) => {
