@@ -1,10 +1,7 @@
-import { GridUtil } from './grid'
 import { Puzzle } from './puzzle'
 import { range } from './utils'
 import { create } from 'random-seed'
 import { NotImplementedError } from './classes'
-
-const { getX, getY } = GridUtil
 
 type Args =
   | []
@@ -66,10 +63,10 @@ export class RandomPuzzle extends Puzzle {
     const horizontalFirst = randomSeed.random() < 0.5
     if (horizontalFirst) {
       puzzle.tap(Math.floor(randomSeed.random() * puzzle.width), puzzle.height - 1)
-      puzzle.tap(getX(puzzle.indexOf(0), puzzle.width), Math.floor(randomSeed.random() * puzzle.height))
+      puzzle.tap(puzzle.indexOf(0) % puzzle.width, Math.floor(randomSeed.random() * puzzle.height))
     } else {
       puzzle.tap(puzzle.width - 1, Math.floor(randomSeed.random() * puzzle.height))
-      puzzle.tap(Math.floor(randomSeed.random() * puzzle.width), getY(puzzle.indexOf(0), puzzle.width))
+      puzzle.tap(Math.floor(randomSeed.random() * puzzle.width), Math.floor(puzzle.indexOf(0) / puzzle.width))
     }
 
     randomSeed.done()
