@@ -1,5 +1,4 @@
 import { Puzzle } from './puzzle'
-import { range } from './utils'
 import { create } from 'random-seed'
 import { NotImplementedError } from './classes'
 
@@ -45,7 +44,8 @@ export class RandomPuzzle extends Puzzle {
 
     const size = width * height
     const numbers: number[] = []
-    const unusedNumbers = range(1, size)
+    const unusedNumbers = [...new Array(size).keys()]
+    unusedNumbers.shift()
 
     for (let i = 3; i < size; i++) {
       numbers.push(unusedNumbers.splice(floor(randomSeed.random() * unusedNumbers.length), 1)[0])
