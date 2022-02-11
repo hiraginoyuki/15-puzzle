@@ -1,7 +1,7 @@
 import { NotImplementedError } from './classes'
 import { OwnedEventEmitter } from './events'
 import { GridUtil } from './grid'
-import { range, repeat } from './utils'
+import { range } from './utils'
 import { insert } from './strings'
 
 export interface TapData {
@@ -126,11 +126,11 @@ export class Puzzle extends Array<number> {
         const index = GridUtil.getIndex(x, y, this.width)
 
         if (color !== undefined && id - 1 === index) {
-          repeat(gridHeight, i => {
+          for (let i = 0; i < gridHeight; i++) {
             const y2 = (1 + gridHeight) * y + 1 + i
             grid[y2] = insert(grid[y2], reset, (1 + gridWidth) * x + 1 + gridWidth)
             grid[y2] = insert(grid[y2], flip, (1 + gridWidth) * x + 1)
-          })
+          }
         }
       })
     })
@@ -161,7 +161,7 @@ export class Puzzle extends Array<number> {
 
     const movedPieces: MovedPiece[] = []
 
-    repeat(distance, () => {
+    for (let i = 0; i < distance; i++) {
       const emptyPieceIndex = this.indexOf(0)
       const emptyPieceX = GridUtil.getX(emptyPieceIndex, this.width)
       const emptyPieceY = GridUtil.getY(emptyPieceIndex, this.width)
@@ -170,7 +170,7 @@ export class Puzzle extends Array<number> {
       movedPieces.push({ id, index })
       this.set(emptyPieceX, emptyPieceY, id)
       this.set(emptyPieceX + directionX, emptyPieceY + directionY, 0)
-    })
+    }
 
     const time = +new Date()
     const tappedPieceIndex = GridUtil.getIndex(x, y, this.width)

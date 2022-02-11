@@ -1,6 +1,6 @@
 import { GridUtil } from './grid'
 import { Puzzle } from './puzzle'
-import { range, repeat } from './utils'
+import { range } from './utils'
 import { chooseItem, chooseIndex } from './random'
 import { create } from 'random-seed'
 import { NotImplementedError } from './classes'
@@ -49,8 +49,9 @@ export class RandomPuzzle extends Puzzle {
     const numbers: number[] = []
     const unusedNumbers = range(1, size)
 
-    repeat(size - 3, () =>
-      numbers.push(unusedNumbers.splice(rndIndex(unusedNumbers), 1)[0]))
+    for (let i = 3; i < size; i++) {
+      numbers.push(unusedNumbers.splice(rndIndex(unusedNumbers), 1)[0])
+    }
 
     const puzzle = new RandomPuzzle(GridUtil.toGrid(numbers.concat(unusedNumbers, 0), width, height), seed)
     if (!puzzle.isSolvable()) {
