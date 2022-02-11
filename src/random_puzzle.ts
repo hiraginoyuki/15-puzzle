@@ -3,6 +3,8 @@ import { range } from './utils'
 import { create } from 'random-seed'
 import { NotImplementedError } from './classes'
 
+const { floor } = Math
+
 type Args =
   | []
   | [number]
@@ -46,7 +48,7 @@ export class RandomPuzzle extends Puzzle {
     const unusedNumbers = range(1, size)
 
     for (let i = 3; i < size; i++) {
-      numbers.push(unusedNumbers.splice(Math.floor(randomSeed.random() * unusedNumbers.length), 1)[0])
+      numbers.push(unusedNumbers.splice(floor(randomSeed.random() * unusedNumbers.length), 1)[0])
     }
 
     const puzzle = new RandomPuzzle(numbers.concat(unusedNumbers, 0), width, seed)
@@ -62,11 +64,11 @@ export class RandomPuzzle extends Puzzle {
 
     const horizontalFirst = randomSeed.random() < 0.5
     if (horizontalFirst) {
-      puzzle.tap(Math.floor(randomSeed.random() * puzzle.width), puzzle.height - 1)
-      puzzle.tap(puzzle.indexOf(0) % puzzle.width, Math.floor(randomSeed.random() * puzzle.height))
+      puzzle.tap(floor(randomSeed.random() * puzzle.width), puzzle.height - 1)
+      puzzle.tap(puzzle.indexOf(0) % puzzle.width, floor(randomSeed.random() * puzzle.height))
     } else {
-      puzzle.tap(puzzle.width - 1, Math.floor(randomSeed.random() * puzzle.height))
-      puzzle.tap(Math.floor(randomSeed.random() * puzzle.width), Math.floor(puzzle.indexOf(0) / puzzle.width))
+      puzzle.tap(puzzle.width - 1, floor(randomSeed.random() * puzzle.height))
+      puzzle.tap(floor(randomSeed.random() * puzzle.width), floor(puzzle.indexOf(0) / puzzle.width))
     }
 
     randomSeed.done()

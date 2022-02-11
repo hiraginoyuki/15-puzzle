@@ -3,6 +3,8 @@ import { OwnedEventEmitter } from './events'
 import { range } from './utils'
 import { insert } from './strings'
 
+const { floor, log } = Math
+
 export interface TapData {
   time: number
   delta: number
@@ -82,7 +84,7 @@ export class Puzzle extends Array<number> {
   public checkSolvable (): boolean {
     const cloned = new Puzzle(this, this.width)
     if (cloned.at(-1) !== 0) {
-      cloned.tap(cloned.width - 1, Math.floor(cloned.indexOf(0) / cloned.width))
+      cloned.tap(cloned.width - 1, floor(cloned.indexOf(0) / cloned.width))
       cloned.tap(cloned.width - 1, cloned.height - 1)
     }
     let isEven = true
@@ -115,7 +117,7 @@ export class Puzzle extends Array<number> {
     const flip = '\x1b[30;47m'
     const reset = '\x1b[0m'
 
-    const maxLength = Math.floor(Math.log(this.length - 1) / Math.log(10)) + 1
+    const maxLength = floor(log(this.length - 1) / log(10)) + 1
     const gridWidth = 2 * (marginWidth ?? 0) + maxLength
     const gridHeight = 2 * (marginHeight ?? 0) + 1
     const separator = '+' + ('-'.repeat(gridWidth) + '+').repeat(this.width)
@@ -156,7 +158,7 @@ export class Puzzle extends Array<number> {
     if (!Number.isInteger(y) || y < 0 || this.height <= y) throw new RangeError('y is out of range')
     const emptyPieceIndex = this.indexOf(0)
     const emptyPieceX = emptyPieceIndex % this.width
-    const emptyPieceY = Math.floor(emptyPieceIndex / this.width)
+    const emptyPieceY = floor(emptyPieceIndex / this.width)
     const isSameX = emptyPieceX === x
     if (isSameX === (emptyPieceY === y)) return null
 
