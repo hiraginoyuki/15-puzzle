@@ -1,7 +1,6 @@
 import { GridUtil } from './grid'
 import { Puzzle } from './puzzle'
 import { range } from './utils'
-import { chooseItem, chooseIndex } from './random'
 import { create } from 'random-seed'
 import { NotImplementedError } from './classes'
 
@@ -44,15 +43,14 @@ export class RandomPuzzle extends Puzzle {
     const [seed, width, height] = RandomPuzzle._parseArgs(args)
 
     const randomSeed = create(seed)
-    const rndItem = <T>(array: T[]): T => chooseItem(array, () => randomSeed.random())
-    const rndIndex = <T>(array: T[]): number => chooseIndex(array, () => randomSeed.random())
+    const rndIndex = (length: number): number => Math.floor(randomSeed.random() * length)
 
     const size = width * height
     const numbers: number[] = []
     const unusedNumbers = range(1, size)
 
     for (let i = 3; i < size; i++) {
-      numbers.push(unusedNumbers.splice(rndIndex(unusedNumbers), 1)[0])
+      numbers.push(unusedNumbers.splice(rndIndex(unusedNumbers.length), 1)[0])
     }
 
     const puzzle = new RandomPuzzle(toGrid(numbers.concat(unusedNumbers, 0), width, height), seed)
@@ -66,13 +64,13 @@ export class RandomPuzzle extends Puzzle {
       puzzle._isSolved = null
     }
 
-    const horizontalFirst = rndItem([true, false])
+    const horizontalFirst = randomSeed.random() < 0.5
     if (horizontalFirst) {
-      puzzle.tap(rndItem(range(puzzle.width)), puzzle.height - 1)
-      puzzle.tap(getX(puzzle.indexOf(0), puzzle.width), rndItem(range(puzzle.height)))
+      puzzle.tap(rndIndex(puzzle.width), puzzle.height - 1)
+      puzzle.tap(getX(puzzle.indexOf(0), puzzle.width), rndIndex(puzzle.height))
     } else {
-      puzzle.tap(puzzle.width - 1, rndItem(range(puzzle.height)))
-      puzzle.tap(rndItem(range(puzzle.width)), getY(puzzle.indexOf(0), puzzle.width))
+      puzzle.tap(puzzle.width - 1, rndIndex(puzzle.height))
+      puzzle.tap(rndIndex(puzzle.width), getY(puzzle.indexOf(0), puzzle.width))
     }
 
     randomSeed.done()
