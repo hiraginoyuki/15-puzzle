@@ -81,22 +81,27 @@ export class Puzzle extends Array<number> {
   }
 
   public checkSolvable (): boolean {
-    const cloned = this.clone()
+    const cloned = new Puzzle(this, this.width)
     if (cloned.at(-1) !== 0) {
       cloned.tap(cloned.width - 1, GridUtil.getY(cloned.indexOf(0), cloned.width))
       cloned.tap(cloned.width - 1, cloned.height - 1)
     }
-    const swapCount = range(cloned.length - 2).reduce((acc, i) => {
-      const jVelue = cloned[i]
-      const kVelue = i + 1
-      const kIndex = cloned.indexOf(kVelue)
-      if (i !== kIndex) {
-        cloned[i] = kVelue
-        cloned[kIndex] = jVelue
-        return acc + 1
-      } else return acc
-    }, 0)
-    return swapCount % 2 === 0
+    let isEven = true
+    for (let currentIndex = 0, targetIndex, targetValue, assigneeValue; currentIndex < cloned.length - 1; currentIndex++) {
+      targetValue = cloned[currentIndex]
+      targetIndex = targetValue - 1
+      if (currentIndex === targetIndex) continue
+      while (true) {
+        assigneeValue = cloned[targetIndex]
+        cloned[targetIndex] = targetValue
+        targetValue = assigneeValue
+        targetIndex = targetValue - 1
+        isEven = !isEven
+        if (currentIndex === targetIndex) break
+      }
+      cloned[targetIndex] = targetValue
+    }
+    return isEven
   }
 
   public checkSolving (): boolean {
