@@ -4,7 +4,7 @@ import { range } from './utils'
 import { create } from 'random-seed'
 import { NotImplementedError } from './classes'
 
-const { getX, getY, toGrid } = GridUtil
+const { getX, getY } = GridUtil
 
 type Args =
   | []
@@ -15,13 +15,13 @@ type Args =
   | [string, number, number]
 
 export class RandomPuzzle extends Puzzle {
-  public constructor (pieces: number[][], public seed: string) {
-    super(pieces.flat(), pieces[0].length)
+  public constructor (pieces: number[], width: number, public seed: string) {
+    super(pieces, width)
   }
 
   public clone (): RandomPuzzle {
     if (Object.getPrototypeOf(this) !== RandomPuzzle.prototype) throw new NotImplementedError('clone')
-    return new RandomPuzzle(this.to2d(), this.seed)
+    return new RandomPuzzle(this, this.width, this.seed)
   }
 
   protected static _parseArgs (args: Args): readonly [string, number, number] {
@@ -43,17 +43,16 @@ export class RandomPuzzle extends Puzzle {
     const [seed, width, height] = RandomPuzzle._parseArgs(args)
 
     const randomSeed = create(seed)
-    const rndIndex = (length: number): number => Math.floor(randomSeed.random() * length)
 
     const size = width * height
     const numbers: number[] = []
     const unusedNumbers = range(1, size)
 
     for (let i = 3; i < size; i++) {
-      numbers.push(unusedNumbers.splice(rndIndex(unusedNumbers.length), 1)[0])
+      numbers.push(unusedNumbers.splice(Math.floor(randomSeed.random() * unusedNumbers.length), 1)[0])
     }
 
-    const puzzle = new RandomPuzzle(toGrid(numbers.concat(unusedNumbers, 0), width, height), seed)
+    const puzzle = new RandomPuzzle(numbers.concat(unusedNumbers, 0), width, seed)
     if (!puzzle.isSolvable()) {
       const tmp = puzzle[size - 3]
       puzzle[size - 3] = puzzle[size - 2]
@@ -66,11 +65,11 @@ export class RandomPuzzle extends Puzzle {
 
     const horizontalFirst = randomSeed.random() < 0.5
     if (horizontalFirst) {
-      puzzle.tap(rndIndex(puzzle.width), puzzle.height - 1)
-      puzzle.tap(getX(puzzle.indexOf(0), puzzle.width), rndIndex(puzzle.height))
+      puzzle.tap(Math.floor(randomSeed.random() * puzzle.width), puzzle.height - 1)
+      puzzle.tap(getX(puzzle.indexOf(0), puzzle.width), Math.floor(randomSeed.random() * puzzle.height))
     } else {
-      puzzle.tap(puzzle.width - 1, rndIndex(puzzle.height))
-      puzzle.tap(rndIndex(puzzle.width), getY(puzzle.indexOf(0), puzzle.width))
+      puzzle.tap(puzzle.width - 1, Math.floor(randomSeed.random() * puzzle.height))
+      puzzle.tap(Math.floor(randomSeed.random() * puzzle.width), getY(puzzle.indexOf(0), puzzle.width))
     }
 
     randomSeed.done()
