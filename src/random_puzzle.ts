@@ -26,7 +26,7 @@ export class RandomPuzzle extends Puzzle {
 
   protected static _parseArgs (args: Args): readonly [string, number, number] {
     const isSeedPassed = typeof args[0] === 'string'
-    const seed = isSeedPassed ? args[0] as string : `${+new Date()}`
+    const seed = isSeedPassed ? args[0] as string : `${Date.now()}`
     const width = isSeedPassed ? typeof args[1] === 'number' ? args[1] : 4 : typeof args[0] === 'number' ? args[0] : 4
     const height = isSeedPassed ? typeof args[2] === 'number' ? args[2] : width : typeof args[1] === 'number' ? args[1] : width
 

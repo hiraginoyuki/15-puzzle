@@ -54,7 +54,7 @@ export class Puzzle extends Array<number> {
     return new Puzzle(this, this.width)
   }
 
-  public readonly timeGenerated = +new Date()
+  public readonly timeGenerated = Date.now()
   public get timeStarted (): number | null {
     return this.taps.at(0)?.time ?? null
   }
@@ -187,7 +187,7 @@ export class Puzzle extends Array<number> {
       }
     }
 
-    const time = +new Date()
+    const time = Date.now()
     const tapData: TapData = {
       time,
       delta: time - (this.taps.at(-1)?.delta ?? this.timeGenerated),
