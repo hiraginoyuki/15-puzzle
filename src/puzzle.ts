@@ -2,7 +2,6 @@ import { NotImplementedError } from './classes'
 import { OwnedEventEmitter } from './events'
 import { GridUtil } from './grid'
 import { range, repeat } from './utils'
-import { Vec2 } from './vec2'
 import { insert } from './strings'
 
 export interface TapData {
@@ -157,10 +156,8 @@ export class Puzzle extends Array<number> {
     if ((emptyPieceX === x) === (emptyPieceY === y)) return null
 
     const distance = Math.abs(emptyPieceX - x + emptyPieceY - y)
-    const direction = new Vec2(
-      -(x < emptyPieceX) + +(emptyPieceX < x),
-      -(y < emptyPieceY) + +(emptyPieceY < y)
-    )
+    const directionX = -(x < emptyPieceX) + +(emptyPieceX < x)
+    const directionY = -(y < emptyPieceY) + +(emptyPieceY < y)
 
     const movedPieces: MovedPiece[] = []
 
@@ -168,11 +165,11 @@ export class Puzzle extends Array<number> {
       const emptyPieceIndex = this.indexOf(0)
       const emptyPieceX = GridUtil.getX(emptyPieceIndex, this.width)
       const emptyPieceY = GridUtil.getY(emptyPieceIndex, this.width)
-      const index = GridUtil.getIndex(emptyPieceX + direction.x, emptyPieceY + direction.y, this.width)
+      const index = GridUtil.getIndex(emptyPieceX + directionX, emptyPieceY + directionY, this.width)
       const id = this[index]
       movedPieces.push({ id, index })
       this.set(emptyPieceX, emptyPieceY, id)
-      this.set(emptyPieceX + direction.x, emptyPieceY + direction.y, 0)
+      this.set(emptyPieceX + directionX, emptyPieceY + directionY, 0)
     })
 
     const time = +new Date()
