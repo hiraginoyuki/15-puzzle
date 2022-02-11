@@ -158,27 +158,34 @@ export class Puzzle extends Array<number> {
     const emptyPieceIndex = this.indexOf(0)
     const emptyPieceX = GridUtil.getX(emptyPieceIndex, this.width)
     const emptyPieceY = GridUtil.getY(emptyPieceIndex, this.width)
-    if ((emptyPieceX === x) === (emptyPieceY === y)) return null
+    const isSameX = emptyPieceX === x
+    if (isSameX === (emptyPieceY === y)) return null
 
-    const distance = Math.abs(emptyPieceX - x + emptyPieceY - y)
-    const directionX = -(x < emptyPieceX) + +(emptyPieceX < x)
-    const directionY = -(y < emptyPieceY) + +(emptyPieceY < y)
-
-    const movedPieces: MovedPiece[] = []
-
-    for (let i = 0; i < distance; i++) {
-      const emptyPieceIndex = this.indexOf(0)
-      const emptyPieceX = GridUtil.getX(emptyPieceIndex, this.width)
-      const emptyPieceY = GridUtil.getY(emptyPieceIndex, this.width)
-      const index = GridUtil.getIndex(emptyPieceX + directionX, emptyPieceY + directionY, this.width)
-      const id = this[index]
-      movedPieces.push({ id, index })
-      this.set(emptyPieceX, emptyPieceY, id)
-      this.set(emptyPieceX + directionX, emptyPieceY + directionY, 0)
+    let movedPieces: MovedPiece[]
+    const tappedPieceIndex = GridUtil.getIndex(x, y, this.width)
+    if (isSameX) {
+      let index = emptyPieceIndex
+      movedPieces = []
+      if (emptyPieceY < y) {
+        for (; index < tappedPieceIndex; index += this.width) {
+          movedPieces.push({ index, id: this[index] = this[index + this.width] })
+        }
+      } else {
+        for (; tappedPieceIndex < index; index -= this.width) {
+          movedPieces.push({ index, id: this[index] = this[index - this.width] })
+        }
+      }
+    } else {
+      if (emptyPieceX < x) {
+        movedPieces = this.slice(emptyPieceIndex + 1, tappedPieceIndex + 1).map((id, i) => ({ index: i + emptyPieceIndex, id }))
+        this.copyWithin(emptyPieceIndex, emptyPieceIndex + 1, tappedPieceIndex + 1)
+      } else {
+        movedPieces = this.slice(emptyPieceIndex, tappedPieceIndex).map((id, i) => ({ index: i + emptyPieceIndex, id }))
+        this.copyWithin(tappedPieceIndex + 1, tappedPieceIndex, emptyPieceIndex)
+      }
     }
 
     const time = +new Date()
-    const tappedPieceIndex = GridUtil.getIndex(x, y, this.width)
     const tapData: TapData = {
       time,
       delta: time - (this.taps.at(-1)?.delta ?? this.timeGenerated),
@@ -188,6 +195,11 @@ export class Puzzle extends Array<number> {
       piece: this[tappedPieceIndex],
       movedPieces
     }
+    this[tappedPieceIndex] = 0
+    this._isSolvable = null
+    this._2d = null
+    this._isSolving = null
+    this._isSolved = null
 
     this.taps.push(tapData)
     this.events.emit('tap', tapData)
