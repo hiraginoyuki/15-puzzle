@@ -39,7 +39,7 @@ export class RandomPuzzle extends Puzzle {
   public static generate (seed: string, size: number): RandomPuzzle
   public static generate (seed: string, width: number, height: number): RandomPuzzle
   public static generate (...args: Args): RandomPuzzle {
-    const [seed, width, height] = this._parseArgs(args)
+    const [seed, width, height] = RandomPuzzle._parseArgs(args)
 
     const randomSeed = create(seed)
     const rndItem = <T>(array: T[]): T => chooseItem(array, () => randomSeed.random())
@@ -52,7 +52,7 @@ export class RandomPuzzle extends Puzzle {
     repeat(size - 3, () =>
       numbers.push(unusedNumbers.splice(rndIndex(unusedNumbers), 1)[0]))
 
-    const puzzle = new this(GridUtil.toGrid(numbers.concat(unusedNumbers, 0), width, height), seed)
+    const puzzle = new RandomPuzzle(GridUtil.toGrid(numbers.concat(unusedNumbers, 0), width, height), seed)
     if (!puzzle.isSolvable()) {
       const tmp = puzzle[size - 3]
       puzzle[size - 3] = puzzle[size - 2]
