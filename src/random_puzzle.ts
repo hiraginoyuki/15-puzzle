@@ -1,9 +1,8 @@
-import { GridUtil } from './grid'
-import { Piece, Puzzle } from './puzzle'
-import { range, repeat } from './utils'
-import { chooseItem, chooseIndex } from './random'
+import { Puzzle } from './puzzle'
 import { create } from 'random-seed'
 import { NotImplementedError } from './classes'
+
+const { floor } = Math
 
 type Args =
   | []
@@ -14,18 +13,18 @@ type Args =
   | [string, number, number]
 
 export class RandomPuzzle extends Puzzle {
-  public constructor (pieces: Piece[][] | number[][], public seed: string) {
-    super(pieces)
+  public constructor (pieces: number[], width: number, public seed: string) {
+    super(pieces, width)
   }
 
   public clone (): RandomPuzzle {
     if (Object.getPrototypeOf(this) !== RandomPuzzle.prototype) throw new NotImplementedError('clone')
-    return new RandomPuzzle(this.to2d().map(row => row.map(piece => piece.id)), this.seed)
+    return new RandomPuzzle(this, this.width, this.seed)
   }
 
   protected static _parseArgs (args: Args): readonly [string, number, number] {
     const isSeedPassed = typeof args[0] === 'string'
-    const seed = isSeedPassed ? args[0] as string : `${+new Date()}`
+    const seed = isSeedPassed ? args[0] as string : `${Date.now()}`
     const width = isSeedPassed ? typeof args[1] === 'number' ? args[1] : 4 : typeof args[0] === 'number' ? args[0] : 4
     const height = isSeedPassed ? typeof args[2] === 'number' ? args[2] : width : typeof args[1] === 'number' ? args[1] : width
 
@@ -39,31 +38,37 @@ export class RandomPuzzle extends Puzzle {
   public static generate (seed: string, size: number): RandomPuzzle
   public static generate (seed: string, width: number, height: number): RandomPuzzle
   public static generate (...args: Args): RandomPuzzle {
-    const [seed, width, height] = this._parseArgs(args)
+    const [seed, width, height] = RandomPuzzle._parseArgs(args)
 
     const randomSeed = create(seed)
-    const rndItem = <T>(array: T[]): T => chooseItem(array, () => randomSeed.random())
-    const rndIndex = <T>(array: T[]): number => chooseIndex(array, () => randomSeed.random())
 
     const size = width * height
     const numbers: number[] = []
-    const unusedNumbers = range(1, size)
+    const unusedNumbers = [...new Array(size).keys()]
+    unusedNumbers.shift()
 
-    repeat(size - 3, () =>
-      numbers.push(unusedNumbers.splice(rndIndex(unusedNumbers), 1)[0]))
-
-    const puzzle = new this(GridUtil.toGrid(numbers.concat(unusedNumbers, 0), width, height), seed)
-    if (!puzzle.isSolvable()) {
-      puzzle.swap(puzzle.to1d().at(-3) as Piece, puzzle.to1d().at(-2) as Piece)
+    for (let i = 3; i < size; i++) {
+      numbers.push(unusedNumbers.splice(floor(randomSeed.random() * unusedNumbers.length), 1)[0])
     }
 
-    const horizontalFirst = rndItem([true, false])
+    const puzzle = new RandomPuzzle(numbers.concat(unusedNumbers, 0), width, seed)
+    if (!puzzle.isSolvable()) {
+      const tmp = puzzle[size - 3]
+      puzzle[size - 3] = puzzle[size - 2]
+      puzzle[size - 2] = tmp
+      puzzle._isSolvable = null
+      puzzle._2d = null
+      puzzle._isSolving = null
+      puzzle._isSolved = null
+    }
+
+    const horizontalFirst = randomSeed.random() < 0.5
     if (horizontalFirst) {
-      puzzle.tap(rndItem(range(puzzle.width)), puzzle.height - 1)
-      puzzle.tap(puzzle.get(0).x, rndItem(range(puzzle.height)))
+      puzzle.tap(floor(randomSeed.random() * puzzle.width), puzzle.height - 1)
+      puzzle.tap(puzzle.indexOf(0) % puzzle.width, floor(randomSeed.random() * puzzle.height))
     } else {
-      puzzle.tap(puzzle.width - 1, rndItem(range(puzzle.height)))
-      puzzle.tap(rndItem(range(puzzle.width)), puzzle.get(0).y)
+      puzzle.tap(puzzle.width - 1, floor(randomSeed.random() * puzzle.height))
+      puzzle.tap(floor(randomSeed.random() * puzzle.width), floor(puzzle.indexOf(0) / puzzle.width))
     }
 
     randomSeed.done()

@@ -1,18 +1,12 @@
 import 'mocha'
 import { assert, expect } from 'chai'
-import { Piece, Puzzle } from '../src/puzzle'
+import { Puzzle } from '../src/puzzle'
 
 function to2dNumbers (puzzle: Puzzle) {
-  return puzzle.to2d().map(row => row.map(({ id }) => id))
+  return puzzle.to2d()
 }
 
 describe('puzzle.ts', () => {
-  describe('class Piece', () => {
-    it('new Piece()', () => {
-      expect(new Piece(1, 2, 3, 4)).to.deep.equal(Object.assign([1, 2], { x: 1, y: 2, index: 3, id: 4 }))
-    })
-  })
-
   describe('class Puzzle', () => {
     const solvedPuzzleArr = [
       [1, 2, 3, 4],
@@ -34,41 +28,38 @@ describe('puzzle.ts', () => {
     ]
 
     it('Puzzle.prototype.constructor()', () => {
-      const solvedPuzzle = new Puzzle(solvedPuzzleArr)
+      const solvedPuzzle = new Puzzle(solvedPuzzleArr.flat(), solvedPuzzleArr[0].length)
       expect(solvedPuzzle).to.be.an.instanceOf(Puzzle)
       expect(solvedPuzzle).to.have.a.property('width', solvedPuzzleArr[0].length)
       expect(solvedPuzzle).to.have.a.property('height', solvedPuzzleArr.length)
-      expect(solvedPuzzle).to.have.a.property('size', solvedPuzzleArr.flat().length)
       expect(solvedPuzzle).to.have.a.property('taps').that.is.an('array').and.empty
 
-      const solvablePuzzle = new Puzzle(solvablePuzzleArr)
+      const solvablePuzzle = new Puzzle(solvablePuzzleArr.flat(), solvablePuzzleArr[0].length)
       expect(solvablePuzzle).to.be.an.instanceOf(Puzzle)
       expect(solvablePuzzle).to.have.a.property('width', solvablePuzzleArr[0].length)
       expect(solvablePuzzle).to.have.a.property('height', solvablePuzzleArr.length)
-      expect(solvablePuzzle).to.have.a.property('size', solvablePuzzleArr.flat().length)
       expect(solvablePuzzle).to.have.a.property('taps').that.is.an('array').and.empty
 
-      const unsolvablePuzzle = new Puzzle(unsolvablePuzzleArr)
+      const unsolvablePuzzle = new Puzzle(unsolvablePuzzleArr.flat(), unsolvablePuzzleArr[0].length)
       expect(unsolvablePuzzle).to.be.an.instanceOf(Puzzle)
       expect(unsolvablePuzzle).to.have.a.property('width', unsolvablePuzzleArr[0].length)
       expect(unsolvablePuzzle).to.have.a.property('height', unsolvablePuzzleArr.length)
-      expect(unsolvablePuzzle).to.have.a.property('size', unsolvablePuzzleArr.flat().length)
       expect(unsolvablePuzzle).to.have.a.property('taps').that.is.an('array').and.empty
     })
 
     it('Puzzle.prototype.clone()', () => {
-      const solvedPuzzle = new Puzzle(solvedPuzzleArr)
-      const solvablePuzzle = new Puzzle(solvablePuzzleArr)
-      const unsolvablePuzzle = new Puzzle(unsolvablePuzzleArr)
+      const solvedPuzzle = new Puzzle(solvedPuzzleArr.flat(), solvedPuzzleArr[0].length)
+      const solvablePuzzle = new Puzzle(solvablePuzzleArr.flat(), solvablePuzzleArr[0].length)
+      const unsolvablePuzzle = new Puzzle(unsolvablePuzzleArr.flat(), unsolvablePuzzleArr[0].length)
       assert.deepEqual(solvedPuzzle, solvedPuzzle.clone())
       assert.deepEqual(solvablePuzzle, solvablePuzzle.clone())
       assert.deepEqual(unsolvablePuzzle, unsolvablePuzzle.clone())
     })
 
     it('Puzzle.prototype.{time*ed, taps, isSolv*()}', () => {
-      const solvedPuzzle = new Puzzle(solvedPuzzleArr)
-      const solvablePuzzle = new Puzzle(solvablePuzzleArr)
-      const unsolvablePuzzle = new Puzzle(unsolvablePuzzleArr)
+      const solvedPuzzle = new Puzzle(solvedPuzzleArr.flat(), solvedPuzzleArr[0].length)
+      const solvablePuzzle = new Puzzle(solvablePuzzleArr.flat(), solvablePuzzleArr[0].length)
+      const unsolvablePuzzle = new Puzzle(unsolvablePuzzleArr.flat(), unsolvablePuzzleArr[0].length)
 
       expect(solvedPuzzle).to.have.a.property('timeGenerated').that.is.a('number')
       expect(solvedPuzzle).to.have.a.property('timeStarted', null)
