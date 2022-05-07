@@ -1,5 +1,5 @@
 # 15-puzzle 🧩
-[15-puzzle](https://github.com/HiraginoYuki/15-puzzle) is a simple 15 puzzle library with many useful features. 😎
+[15-puzzle](https://github.com/hiraginoyuki/15-puzzle) is a simple 15 puzzle library with many useful features. 😎
 
 ## Usage
 
@@ -26,10 +26,10 @@ const bar = RandomPuzzle.generate(5)     // 5x5
 const baz = RandomPuzzle.generate(6, 7)  // 6x7
 ```
 
-> See the [type definition](https://github.com/HiraginoYuki/15-puzzle/blob/52e012ac70c9d4b58cba22daeee2220809205574/src/random_puzzle.ts#L36-L41) to learn what you can do. 🧐
+> See the [type definition](https://github.com/hiraginoyuki/15-puzzle/blob/52e012ac70c9d4b58cba22daeee2220809205574/src/random_puzzle.ts#L36-L41) to learn what you can do. 🧐
 
-Now (actually since [v2.0.2](https://github.com/HiraginoYuki/15-puzzle/blob/d20e8fa0f415b9313d8b6fc4d8cc670b019e3bec/package.json#L24-L25) 😅), as we use [`random-seed`](https://www.npmjs.com/package/random-seed) to generate a puzzle, this feature is actually supported! 🎉
-Just give a seed as the first argument. A seed must be a string, and here's [why](https://github.com/HiraginoYuki/15-puzzle/blob/52e012ac70c9d4b58cba22daeee2220809205574/src/random_puzzle.ts#L27).
+Now (actually since [v2.0.2](https://github.com/hiraginoyuki/15-puzzle/blob/d20e8fa0f415b9313d8b6fc4d8cc670b019e3bec/package.json#L24-L25) 😅), as we use [`random-seed`](https://www.npmjs.com/package/random-seed) to generate a puzzle, this feature is actually supported! 🎉
+Just give a seed as the first argument. A seed must be a string, and here's [why](https://github.com/hiraginoyuki/15-puzzle/blob/52e012ac70c9d4b58cba22daeee2220809205574/src/random_puzzle.ts#L27).
 ```js
 import { RandomPuzzle } from '15-puzzle'
 
@@ -39,7 +39,7 @@ const baz = RandomPuzzle.generate('kazukazu123123', 6, 7)  // 6x7
 ```
 
 If you have an array of pieces, instead, use `Puzzle` which allows you to create an instance without `seed`. Note that 0 means an empty square.
-> FYI, [`RandomPuzzle` actually extends `Puzzle`](https://github.com/HiraginoYuki/15-puzzle/blob/52e012ac70c9d4b58cba22daeee2220809205574/src/random_puzzle.ts#L16). <br>
+> FYI, [`RandomPuzzle` actually extends `Puzzle`](https://github.com/hiraginoyuki/15-puzzle/blob/52e012ac70c9d4b58cba22daeee2220809205574/src/random_puzzle.ts#L16). <br>
 ```js
 import { Puzzle } from '15-puzzle'
 
@@ -121,4 +121,4 @@ console.log(puzzle.toString())
 // +--+--+--+--+
 ```
 
-> There's a method called [`swap`](https://github.com/HiraginoYuki/15-puzzle/blob/52e012ac70c9d4b58cba22daeee2220809205574/src/grid.ts#L70-L77) which literally swaps two pieces, but using this method is not recommended, because calling this manually might make the puzzle become unsolvable.
+> There's a method called [`swap`](https://github.com/hiraginoyuki/15-puzzle/blob/52e012ac70c9d4b58cba22daeee2220809205574/src/grid.ts#L70-L77) which literally swaps two pieces, but using this method is not recommended, because calling this manually might make the puzzle become unsolvable.
