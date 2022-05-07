@@ -1,0 +1,41 @@
+name: Compile
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "pnpm"
+      - run: pnpm install
+      - name: Compile
+        run: pnpm tsc
+      - name: Setup git
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global push.default current
+      - name: Commit
+        run: |
+          git switch -c actions-tmp
+          sed -i -e '/dist/d' .gitignore
+          git add .
+          git commit -m "tmp"
+          git switch compiled || git switch --orphan compiled
+          ls -a | grep -vE '^(.|..|.git)$' | xargs rm -rf
+          git restore --source actions-tmp dist LICENSE package.json README.md
+          git add .
+          git commit -m "Compile ${GITHUB_SHA}"
+      - name: Push
+        run: git push
