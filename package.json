@@ -21,7 +21,7 @@
     "url": "https://github.com/HiraginoYuki/15-puzzle/issues"
   },
   "homepage": "https://github.com/HiraginoYuki/15-puzzle#readme",
-  "packageManager": "pnpm@6.32.0",
+  "packageManager": "pnpm@7.0.0",
   "dependencies": {
     "@types/random-seed": "^0.3.3",
     "random-seed": "^0.3.0"
