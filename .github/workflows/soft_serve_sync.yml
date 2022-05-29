@@ -1,0 +1,25 @@
+name: Soft Serve Sync
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  soft-serve:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Push to Soft-Serve
+        uses: charmbracelet/soft-serve-action@master
+        with:
+          name: 15-puzzle
+          server: shiina.family
+          ssh-key: ${{ secrets.SHIINA_SOFT_SERVE_PRIVATE_KEY }}
+          ssh-user: automation
+          ssh-port: 22
